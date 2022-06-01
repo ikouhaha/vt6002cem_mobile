@@ -86,9 +86,6 @@ class RegisterActivity : AppCompatActivity() {
                     .build())
             .build();
 
-        var currentUser = auth.getCurrentUser()
-
-
         //updateUI(currentUser);
     }
 

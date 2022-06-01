@@ -1,21 +1,17 @@
 package com.example.vt6002cem.ui.settings
 
-import android.R
+
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-
+import com.example.vt6002cem.R
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.FragmentSettingsBinding
-import com.example.vt6002cem.ui.home.HomeFragment
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -38,9 +34,10 @@ class SettingsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        if (auth == null) {
-            //val intent = Intent(activity, LoginActivity::class.java)
-            //startActivity(intent)
+        var user  = auth.currentUser
+        if (user == null) {
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
         }
 
     }
@@ -64,12 +61,13 @@ class SettingsFragment : Fragment() {
         settingsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-        navigation = activity.findViewById(R.id.navigationBarBackground)
+
+        navigation =requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
 
         _binding?.textButton?.setOnClickListener {
             auth?.signOut()
+            navigation?.selectedItemId = R.id.navigation_home
 
-            bottomNavigation.selectedItemId = R.id.page_2
         };
 
         return root
@@ -82,3 +80,5 @@ class SettingsFragment : Fragment() {
 
 
 }
+
+

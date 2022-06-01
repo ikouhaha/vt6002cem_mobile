@@ -10,6 +10,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.vt6002cem.MainActivity
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityLoginBinding
 import com.example.vt6002cem.model.User
@@ -44,6 +45,11 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         auth = Firebase.auth
+        var user  = auth.currentUser
+        if (user != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         oneTapClient = Identity.getSignInClient(this)
         signInRequest = BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
@@ -88,10 +94,10 @@ class LoginActivity : AppCompatActivity() {
                             Log.d(TAG, "signInWithCredential:success")
                             val user = auth.currentUser
 
-                            GlobalScope.launch {
-                                Log.d(TAG,Helper.getToken());
-                                Log.d(TAG, "signInWithCredential:token success")
-                            }
+
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+
 
 
                             //updateUI(user)
