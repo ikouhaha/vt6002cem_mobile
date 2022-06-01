@@ -35,5 +35,40 @@ class User : BaseObservable() {
             field = value
             notifyPropertyChanged(BR.confirmPassword)
         }
-
+    @get:Bindable
+    var displayName: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.displayName)
+        }
+    @get:Bindable
+    var lastName: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.lastName)
+        }
+    @get:Bindable
+    var avatarUrl: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.avatarUrl)
+        }
+    @get:Bindable
+    var role: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.role)
+        }
+    @get:Bindable
+    var fid: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.fid)
+        }
+    @get:Bindable
+    var companyCode: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.companyCode)
+        }
 }

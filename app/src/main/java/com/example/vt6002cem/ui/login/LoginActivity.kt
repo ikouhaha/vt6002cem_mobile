@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityLoginBinding
-import com.example.vt6002cem.databinding.ActivityMainBinding
 import com.example.vt6002cem.model.User
 import com.example.vt6002cem.ui.home.HomeViewModel
 import com.example.vt6002cem.ui.register.RegisterActivity
@@ -36,7 +35,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var viewModel: LoginViewModel
     private var TAG = "Login"
-
+    enum class REQUEST(val value: Int){
+        EMAIL(1),
+        GOOGLE(2)
+    }
 
 
     override fun onStart() {
@@ -105,6 +107,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(TAG, "No ID token!")
             }
         }
+
     }
 
     fun googleSignin(view: View){
@@ -114,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
             ) { result ->
                 try {
                     startIntentSenderForResult(
-                        result.pendingIntent.intentSender, 2, null, 0, 0, 0
+                        result.pendingIntent.intentSender, REQUEST.GOOGLE.value, null, 0, 0, 0
                     )
                 } catch (e: SendIntentException) {
                     Log.e(TAG, "Couldn't start One Tap UI: " + e.localizedMessage)

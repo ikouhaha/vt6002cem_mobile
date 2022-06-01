@@ -1,13 +1,19 @@
 package com.example.vt6002cem.common
 
+
+import android.app.Activity
 import android.content.Context
+import android.view.View
+import android.view.WindowManager
+import com.example.vt6002cem.R
 import com.google.android.gms.tasks.Tasks
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import retrofit2.Response
 
 
 object Helper {
-
 
 
     fun ensureNotNull(context: Context?) {
@@ -47,4 +53,23 @@ object Helper {
         }
         return token
     }
+
+    fun block(context: Context?){
+        ensureNotNull(context)
+        (context as Activity).getWindow().setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    fun unblock(context: Context?){
+        ensureNotNull(context)
+        (context as Activity).getWindow().clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    fun getErrorMsg(response: Response<Object>){
+
+
+    }
+
 }
