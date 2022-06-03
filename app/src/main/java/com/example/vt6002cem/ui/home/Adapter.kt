@@ -1,6 +1,7 @@
 package com.example.vt6002cem.ui.home
 
 import android.content.Context
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +11,17 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.example.vt6002cem.R
+import com.example.vt6002cem.BR
 
 
 
 
-
-class Adapter(context: Context): BaseAdapter() {
+class Adapter(context: Context,viewModel:HomeViewModel): BaseAdapter() {
 
     private var dataBinding: ViewDataBinding? = null
     private val mContext: Context = context
 
-    val list = HomeViewModel().productList
+    val list = viewModel.productList
 
     override fun getCount(): Int {
         return list.value!!.size
@@ -42,7 +43,8 @@ class Adapter(context: Context): BaseAdapter() {
             dataBinding = DataBindingUtil.getBinding(view)
         }
 
-        //dataBinding!!.setVariable(R.id.productVar, list.value!![index]);
+        dataBinding!!.setVariable(BR.product,getItem(index))
+
         return dataBinding!!.getRoot();
     }
 }

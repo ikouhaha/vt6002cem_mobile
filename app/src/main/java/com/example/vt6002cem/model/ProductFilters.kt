@@ -8,8 +8,7 @@ import com.example.vt6002cem.BR
 
 
 
-class Product : BaseObservable() {
-
+class ProductFilters : BaseObservable() {
     @get:Bindable
     var name: String? = null
         set(value) {
@@ -25,10 +24,17 @@ class Product : BaseObservable() {
         }
 
     @get:Bindable
-    var imageBase64: String? = null
+    var page: Int = 1
         set(value) {
             field = value
-            notifyPropertyChanged(BR.imageBase64)
+            notifyPropertyChanged(BR.page)
+        }
+
+    @get:Bindable
+    var limit:Int = 4
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.limit)
         }
 
 }

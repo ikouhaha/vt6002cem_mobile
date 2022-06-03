@@ -8,25 +8,20 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.vt6002cem.MainActivity
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityLoginBinding
 import com.example.vt6002cem.model.User
-import com.example.vt6002cem.ui.home.HomeViewModel
 import com.example.vt6002cem.ui.register.RegisterActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 
 class LoginActivity : AppCompatActivity() {
