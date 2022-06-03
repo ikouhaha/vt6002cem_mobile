@@ -1,58 +1,102 @@
 package com.example.vt6002cem.ui.home
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.GridView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
 import com.example.vt6002cem.model.Product
-import kotlinx.serialization.descriptors.PrimitiveKind
+import com.example.vt6002cem.ui.register.RegisterActivity
+import com.example.vt6002cem.ui.register.RegisterRepository
 
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
+    private  lateinit var viewModel:HomeViewModel
+    private  var adapter = HomeProductAdapter()
+
+    fun loading(){
+        binding.indicator.show()
+        activity?.getWindow()?.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    fun done(){
+        binding.indicator.hide()
+        activity?.getWindow()?.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        );
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-        homeViewModel.onCreated()
-        homeViewModel.errorMessage.observe(viewLifecycleOwner){
-            Toast.makeText(activity,it,Toast.LENGTH_LONG).show()
-        }
-        var p = Product()
-        p.name = "test"
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        _binding?.indicator?.show()
-        
-        val gridView: GridView = _binding!!.gvShow
-        val baseAdapter = activity?.let { Adapter(it, homeViewModel) }
-        gridView.adapter = baseAdapter
-        //Helper.loading(context)
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val retrofitService = ProductsApiService.getInstance()
+        val repository = Factory(HomeRepository(retrofitService))
+        binding.recyclerview.adapter = adapter
+        viewModel = ViewModelProvider(this,repository).get(HomeViewModel::class.java)
+        initObserve()
+
+        viewModel.getProducts()
+
+    }
+
+    fun initObserve(){
+        // add observer
+        viewModel.productList.observe(this) {
+            adapter.setProductList(it)
+        }
+        viewModel.errorMessage.observe(this){
+            Toast.makeText(activity,it,Toast.LENGTH_SHORT).show()
+        }
+        viewModel.loading.observe(viewLifecycleOwner){
+            if(it){
+                loading()
+            }else{
+                done()
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+    }
+
+    private class Factory constructor(private val repository: HomeRepository): ViewModelProvider.Factory {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+                HomeViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
     }
 }

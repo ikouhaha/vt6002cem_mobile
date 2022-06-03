@@ -10,15 +10,19 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.MainActivity
 import com.example.vt6002cem.adpater.AuthApiService
+import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.adpater.UserApiService
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityRegisterBinding
 import com.example.vt6002cem.model.User
+import com.example.vt6002cem.ui.home.HomeRepository
+import com.example.vt6002cem.ui.home.HomeViewModel
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
@@ -45,31 +49,25 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var viewModel: RegisterViewModel
 
     private var TAG = "Signup"
-    enum class REQUEST(val value: Int){
+
+    enum class REQUEST(val value: Int) {
         EMAIL(1),
         GOOGLE(2)
     }
-    private val api = Retrofit.Builder()
-        .baseUrl(Config.apiUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(Config.httpClient)
-        .build()
-        .create(UserApiService::class.java)
 
-
-
-    fun loading(){
+    fun loading() {
         binding.indicator.show()
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        );
     }
 
-    fun done(){
+    fun done() {
         binding.indicator.hide()
         getWindow().clearFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            );
+        );
     }
 
     override fun onStart() {
@@ -81,9 +79,10 @@ class RegisterActivity : AppCompatActivity() {
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
-                    .setServerClientId(Helper.getStringFromName(this,"default_web_client_id"))
+                    .setServerClientId(Helper.getStringFromName(this, "default_web_client_id"))
                     .setFilterByAuthorizedAccounts(false)
-                    .build())
+                    .build()
+            )
             .build();
 
         //updateUI(currentUser);
@@ -92,7 +91,7 @@ class RegisterActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode==REQUEST.GOOGLE.value){
+        if (requestCode == REQUEST.GOOGLE.value) {
             val googleCredential = oneTapClient.getSignInCredentialFromIntent(data)
             val idToken = googleCredential.googleIdToken
 
@@ -113,24 +112,17 @@ class RegisterActivity : AppCompatActivity() {
                                 lifecycleScope.launch {
 
 
-                                        var firebaseUser = auth.currentUser!!
-                                        var user = User()
-                                        user.email = firebaseUser.email
-                                        user.password = (111111111..9999999999).random().toString()
-                                        user.displayName = firebaseUser.displayName
-                                        user.avatarUrl = firebaseUser.photoUrl.toString()
-                                        user.fid = firebaseUser.uid
-                                        user.role = "user" //default
-                                        api.createUser(user).let { response ->
-                                            if (response.isSuccessful) {
-
-                                                startActivity(Intent(this@RegisterActivity,MainActivity::class.java))
-                                            } else {
-                                                Toast.makeText(getBaseContext(),"onFailure: ${response.message()}",Toast.LENGTH_LONG).show()
-                                            }
-                                        }
-                                        done()
-                                    }
+                                    var firebaseUser = auth.currentUser!!
+                                    var user = User()
+                                    user.email = firebaseUser.email
+                                    user.password = (111111111..9999999999).random().toString()
+                                    user.displayName = firebaseUser.displayName
+                                    user.avatarUrl = firebaseUser.photoUrl.toString()
+                                    user.fid = firebaseUser.uid
+                                    user.role = "user" //default
+                                    viewModel.googleSiupUp(user)
+                                    done()
+                                }
                             } else {
                                 // If sign in fails, display a message to the user.
                                 binding.indicator.hide()
@@ -151,26 +143,44 @@ class RegisterActivity : AppCompatActivity() {
         }
 
 
-
     }
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
+        val retrofitService = UserApiService.getInstance()
+        val repository = Factory(RegisterRepository(retrofitService))
+        viewModel = ViewModelProvider(this,repository).get(RegisterViewModel::class.java)
+        initObserve()
         binding.viewModel = viewModel
-
-
-
     }
 
-    fun googleSignin(view: View){
+    fun initObserve(){
+        // add observer
+        viewModel.errorMessage.observe(this){
+            Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
+        }
+        viewModel.loading.observe(this){
+            if(it){
+                loading()
+            }else{
+                done()
+            }
+        }
+        viewModel.isSuccessRegister.observe(this){
+            if(it){
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
 
+            }else{
+                auth.signOut()
+            }
+        }
+    }
+
+    fun googleSignup(view: View) {
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener(
                 this
@@ -189,16 +199,19 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-
-    fun signup(view: View) {
-        if(viewModel.isFormValid()){
-
-        }
+    fun goToLogin(view: View) {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 
+    private class Factory constructor(private val repository: RegisterRepository): ViewModelProvider.Factory {
 
-    fun goToLogin(view: View) {
-        val intent= Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
+                RegisterViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
     }
 }

@@ -4,14 +4,14 @@ import androidx.databinding.BindingAdapter
 import com.example.vt6002cem.common.Validations
 import com.google.android.material.textfield.TextInputLayout
 
-@BindingAdapter("app:emailValidator")
+@BindingAdapter("emailValidator")
 fun emailValidator(view: TextInputLayout, input:String?) {
     if(input!=null){
         view.error  = Validations.email(input)
     }
 
 }
-@BindingAdapter("app:passwordValidator")
+@BindingAdapter("passwordValidator")
 fun passwordValidator(view: TextInputLayout, input:String?) {
     if(input!=null){
         view.error = Validations.password(input)
@@ -19,7 +19,7 @@ fun passwordValidator(view: TextInputLayout, input:String?) {
 
 }
 
-@BindingAdapter(value=["app:confirmPasswordValidator","app:passwordValidator"], requireAll = true)
+@BindingAdapter(value=["confirmPasswordValidator","passwordValidator"], requireAll = true)
 fun confirmPasswordValidator(view: TextInputLayout, confirmPwd:String?, pwd:String?) {
     if(confirmPwd!=null){
         view.error = Validations.confirmPassword(confirmPwd,pwd)

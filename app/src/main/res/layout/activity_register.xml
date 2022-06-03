@@ -125,7 +125,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/signup"
-            android:onClick="signup"
+            android:onClick="@{viewModel.signUp}"
             />
 
 
@@ -138,7 +138,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/google_signup"
-            android:onClick="googleSignin"
+            android:onClick="googleSignup"
             app:icon="@drawable/ic_dashboard_black_24dp" />
 
         <LinearLayout

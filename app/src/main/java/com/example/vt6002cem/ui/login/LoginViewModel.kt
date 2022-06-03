@@ -11,7 +11,7 @@ class LoginViewModel : ViewModel() {
     var password: MutableLiveData<String> = MutableLiveData("")
     var user: MutableLiveData<User> = MutableLiveData(User())
     val formErrors = ObservableArrayList<String>()
-
+    
 
     fun isFormValid(): Boolean {
         formErrors.clear()

@@ -1,60 +1,43 @@
 package com.example.vt6002cem.ui.home
 
-import android.content.Intent
-import android.widget.Toast
 import androidx.lifecycle.*
-import com.example.vt6002cem.Config
-import com.example.vt6002cem.MainActivity
-import com.example.vt6002cem.adpater.ProductsApiService
-import com.example.vt6002cem.adpater.UserApiService
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.model.ProductFilters
-import com.example.vt6002cem.model.User
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.*
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel constructor(private val repository: HomeRepository): ViewModel() {
 
-    var productList: MutableLiveData<ArrayList<Product>> = MutableLiveData(ArrayList())
-    var filters: MutableLiveData<ProductFilters> = MutableLiveData(ProductFilters())
+    var productList= MutableLiveData<List<Product>>()
+    var filters= MutableLiveData<ProductFilters>(ProductFilters())
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
-
-    private val api = Retrofit.Builder()
-        .baseUrl(Config.apiUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(Config.httpClient)
-        .build()
-        .create(ProductsApiService::class.java)
-
-    fun onCreated() {
-        loadProducts(true)
+    var job: Job? = null
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        onError("Exception handled: ${throwable.localizedMessage}")
     }
-
-    fun loadProducts(isClear:Boolean=false) {
-        if(isClear){
-            productList.value?.clear()
-        }
-
-        viewModelScope.launch {
-            api.loadProducts(
-                filters.value?.name,
-                filters.value?.about,
-                filters.value!!.page,
-                filters.value!!.limit
-            ).let { response ->
+    fun getProducts(){
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            loading.postValue(true)
+            val response = repository.getProducts(filters.value!!)
+            withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    var response:ArrayList<Product> = response.body()!!
-                    productList.value!!.addAll(response)
-
-
+                    productList.postValue(response.body())
+                    loading.value = false
                 } else {
-                    errorMessage.value = response.message()
+                    onError("Error : ${response.message()} ")
                 }
             }
         }
-
-
     }
+
+
+    private fun onError(message: String) {
+        errorMessage.value = message
+        loading.value = false
+    }
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
+    }
+
 }

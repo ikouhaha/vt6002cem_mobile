@@ -1,9 +1,12 @@
 package com.example.vt6002cem.adpater
 
+import com.example.vt6002cem.Config
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.model.ProductFilters
 import com.example.vt6002cem.model.User
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 
@@ -15,5 +18,21 @@ interface ProductsApiService {
                              ,@Query("limit") limit:Int
     ): Response<ArrayList<Product>>
 
+
+    companion object {
+        var api: ProductsApiService? = null
+        fun getInstance() : ProductsApiService {
+            if (api == null) {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(Config.apiUrl)
+                    .client(Config.httpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                api = retrofit.create(ProductsApiService::class.java)
+            }
+            return api!!
+        }
+
+    }
 
 }
