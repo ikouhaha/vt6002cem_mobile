@@ -5,12 +5,17 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.WindowManager
+import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Response
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 object Helper {
@@ -41,6 +46,39 @@ object Helper {
             .edit().putString(key, value).apply()
     }
 
+
+    fun getErrorMsg(response: Response<Object>){
+
+
+    }
+
+    fun getHttpTokenClient(token:String):OkHttpClient{
+        var httpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                    val request: Request =
+                        chain.request().newBuilder().addHeader("Authorization", token).build()
+                    chain.proceed(request)
+            }
+            .callTimeout(Config.callTimeout, TimeUnit.MINUTES)
+            .connectTimeout(Config.connectionTimeout, TimeUnit.SECONDS)
+            .readTimeout(Config.readTimeout, TimeUnit.SECONDS)
+            .writeTimeout(Config.writeTimeout, TimeUnit.SECONDS)
+            .build()
+
+        return httpClient
+    }
+
+    fun getHttpClient():OkHttpClient{
+        var httpClient = OkHttpClient.Builder()
+            .callTimeout(Config.callTimeout, TimeUnit.MINUTES)
+            .connectTimeout(Config.connectionTimeout, TimeUnit.SECONDS)
+            .readTimeout(Config.readTimeout, TimeUnit.SECONDS)
+            .writeTimeout(Config.writeTimeout, TimeUnit.SECONDS)
+            .build()
+
+        return httpClient
+    }
+
     suspend fun getToken():String {
         if(Firebase.auth.currentUser==null){
             return ""
@@ -52,24 +90,6 @@ object Helper {
             return ""
         }
         return token
-    }
-
-    fun block(context: Context?){
-        ensureNotNull(context)
-        (context as Activity).getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    fun unblock(context: Context?){
-        ensureNotNull(context)
-        (context as Activity).getWindow().clearFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    fun getErrorMsg(response: Response<Object>){
-
-
     }
 
 }

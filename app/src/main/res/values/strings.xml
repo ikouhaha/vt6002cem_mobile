@@ -7,6 +7,7 @@
     <string name="Emaillabel">Email</string>
     <string name="PasswordLabel">Password</string>
     <string name="EmailRequiredlabel">Email*</string>
+    <string name="SearchLabel">Search product</string>
     <string name="PasswordRequiredLabel">Password*</string>
     <string name="ConfirmPasswordRequiredLabel">Confirm Password*</string>
     <string name="log_in">Login</string>
@@ -22,5 +23,6 @@
     <string name="cardHomeAction2">Action2</string>
     <string name="loading_title" />
     <string name="loading_message">Loading...</string>
+    <string name="search">Search</string>
 
 </resources>

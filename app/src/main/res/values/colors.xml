@@ -17,4 +17,5 @@
     <color name="articlecolor">#3399FF</color>
     <color name="article_title">#3399FF</color>
     <color name="cachecolor">#8ad0e8</color>
+    <color name="about_bg_color">#171918</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.vt6002cem.adpater
 
 import com.example.vt6002cem.Config
+import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.model.User
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -19,7 +20,7 @@ interface UserApiService {
             if (api == null) {
                 val retrofit = Retrofit.Builder()
                     .baseUrl(Config.apiUrl)
-                    .client(Config.httpClient)
+                    .client(Helper.getHttpClient())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 api = retrofit.create(UserApiService::class.java)

@@ -15,6 +15,20 @@ class HomeProductAdapter : RecyclerView.Adapter<MainViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun clearList(){
+        list.clear()
+    }
+
+    fun addProductList(products: List<Product>) {
+        if(this.list ==null){
+            this.list = products.toMutableList()
+        }else{
+            this.list.addAll(products)
+        }
+
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = FragmentHomeCardBinding.inflate(inflater, parent, false)

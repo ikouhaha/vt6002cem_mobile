@@ -10,17 +10,10 @@ import com.example.vt6002cem.BR
 
 class ProductFilters : BaseObservable() {
     @get:Bindable
-    var name: String? = null
+    var searchText: String? = null
         set(value) {
             field = value
-            notifyPropertyChanged(BR.name)
-        }
-
-    @get:Bindable
-    var about: String? = null
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.about)
+            notifyPropertyChanged(BR.searchText)
         }
 
     @get:Bindable
