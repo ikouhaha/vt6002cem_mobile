@@ -12,6 +12,7 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
     var filters= MutableLiveData<ProductFilters>(ProductFilters())
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
+    val nextPage = MutableLiveData<Int>(filters.value?.page)
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")
@@ -27,10 +28,17 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
                     response.body()?.let {
                         if(productList.value.isNullOrEmpty()){
                             productList.postValue(it)
+                            nextPage.postValue(nextPage.value!!+1)
                         }else{
-                            val list: ArrayList<Product> = ArrayList(productList.value!!)
-                            list.addAll(it)
-                            productList.postValue(list)
+
+                            if(it.size>0){
+                                val list: ArrayList<Product> = ArrayList(productList.value!!)
+                                nextPage.postValue(nextPage.value!!+1)
+                                list.addAll(it)
+                                productList.postValue(list)
+                            }
+
+
                             //productList.apply { value?.addAll(it) }
                         }
 
@@ -45,8 +53,9 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
 
     fun loadMore(){
         filters.apply {
-            value?.page = value?.page!!+1
+            value?.page = nextPage.value!!
         }
+        nextPage.postValue(nextPage.value!!+1)
         getProducts()
     }
 
@@ -54,9 +63,15 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
         filters.apply {
             value = ProductFilters()
         }
+        nextPage.postValue(filters.value?.page)
         productList.value?.clear()
     }
+    fun refreshList(){
+        clearList()
+        getProducts()
+    }
     fun search(s: Editable){
+        clearList()
         filters.value?.searchText = if (s.isNullOrEmpty()) null else s.toString()
         getProducts()
     }

@@ -122,8 +122,7 @@ class HomeFragment : Fragment() {
             handled
         })
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.clearList()
-            viewModel.getProducts()
+            viewModel.refreshList()
         }
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
