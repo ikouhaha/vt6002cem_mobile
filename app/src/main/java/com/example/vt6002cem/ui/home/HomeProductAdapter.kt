@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.vt6002cem.databinding.FragmentHomeCardBinding
 import com.example.vt6002cem.model.Product
 
-class HomeProductAdapter : RecyclerView.Adapter<MainViewHolder>() {
+class HomeProductAdapter : RecyclerView.Adapter<HomeProductAdapter.MainViewHolder>() {
 
+    var onItemClick: ((Product) -> Unit)? = null
     var list = mutableListOf<Product>()
 
     fun setProductList(products: List<Product>) {
@@ -15,19 +16,6 @@ class HomeProductAdapter : RecyclerView.Adapter<MainViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun clearList(){
-        list.clear()
-    }
-
-    fun addProductList(products: List<Product>) {
-        if(this.list ==null){
-            this.list = products.toMutableList()
-        }else{
-            this.list.addAll(products)
-        }
-
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -38,13 +26,21 @@ class HomeProductAdapter : RecyclerView.Adapter<MainViewHolder>() {
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val product = list[position]
         holder.binding.product = product
+        holder.binding.position = position
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
+
+    inner class MainViewHolder(val binding: FragmentHomeCardBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            itemView.setOnClickListener {
+                onItemClick?.invoke(list[adapterPosition])
+            }
+        }
+    }
+
+
 }
 
-class MainViewHolder(val binding: FragmentHomeCardBinding) : RecyclerView.ViewHolder(binding.root) {
-
-}

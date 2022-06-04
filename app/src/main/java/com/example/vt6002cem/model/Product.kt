@@ -11,6 +11,13 @@ import com.example.vt6002cem.BR
 class Product : BaseObservable() {
 
     @get:Bindable
+    var id: Int? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.id)
+        }
+
+    @get:Bindable
     var name: String? = null
         set(value) {
             field = value

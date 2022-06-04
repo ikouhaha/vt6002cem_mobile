@@ -2,6 +2,7 @@ package com.example.vt6002cem.ui.home
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,13 +95,6 @@ class HomeFragment : Fragment() {
                 done()
             }
         }
-//        viewModel.filters.observe(this){
-//            if(it.searchText.isNullOrEmpty()){
-//                binding.ivClear.visibility = View.GONE
-//            }else{
-//                binding.ivClear.visibility = View.VISIBLE
-//            }
-//        }
         binding.ivClear.setOnClickListener {
             binding.etSearch.text = null
         }
@@ -132,12 +126,21 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+        adapter.onItemClick = { product ->
+
+            // do something with your item
+            product.name?.let { Log.d("TAG", it) }
+        }
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.clearList()
+    }
+
+    fun viewDetail(view:View){
+
     }
 
     private class Factory constructor(private val repository: HomeRepository): ViewModelProvider.Factory {
