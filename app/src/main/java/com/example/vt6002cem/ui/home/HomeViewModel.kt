@@ -24,7 +24,6 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
             val response = repository.getProducts(filters.value!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-
                     response.body()?.let {
                         if(productList.value.isNullOrEmpty()){
                             productList.postValue(it)

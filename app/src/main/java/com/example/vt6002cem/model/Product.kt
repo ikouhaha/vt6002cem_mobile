@@ -25,6 +25,12 @@ class Product : BaseObservable() {
         }
 
     @get:Bindable
+    var price: Number? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.price)
+        }
+    @get:Bindable
     var about: String? = null
         set(value) {
             field = value

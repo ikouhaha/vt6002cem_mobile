@@ -24,7 +24,11 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/stroke_color"
+        app:cardElevation="0dp">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,6 +37,7 @@
 
             <!-- Media -->
             <ImageView
+                android:id="@+id/productImage"
                 android:layout_width="match_parent"
                 android:layout_height="194dp"
                 android:src="@drawable/ic_home_black_24dp"
@@ -53,21 +58,33 @@
                     android:text="@{product.name}"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:text="@string/cardDefaultSecondTitle"-->
-<!--                    android:textAppearance="?attr/textAppearanceBody2"-->
-<!--                    android:textColor="?android:attr/textColorSecondary"-->
-<!--                    />-->
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@{product.about}"
+                    android:layout_marginTop="8dp"
+                    android:text="@{'$'+product.price.toString()}"
+
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"
+                    />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addToShoppingCartBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addToCart"
+                    app:icon="@drawable/ic_baseline_shopping_cart_24"
+                    style="?attr/borderlessButtonStyle"
                     />
 
             </LinearLayout>

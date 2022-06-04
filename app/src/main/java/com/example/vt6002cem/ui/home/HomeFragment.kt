@@ -13,7 +13,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.vt6002cem.R
 import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
 import com.google.firebase.auth.ktx.auth
@@ -24,8 +27,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private  lateinit var viewModel:HomeViewModel
-    private  var adapter = HomeProductAdapter()
-
+    private  lateinit  var adapter:HomeProductAdapter
+    private  lateinit var  navController: NavController
+    private var TAG = "Home"
     fun loading(){
         binding.indicator.show()
 
@@ -39,13 +43,12 @@ class HomeFragment : Fragment() {
         if(binding.swipeRefreshLayout.isRefreshing){
             binding.swipeRefreshLayout.isRefreshing = false
         }
-//        activity?.getWindow()?.clearFlags(
-//            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-//        );
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adapter = HomeProductAdapter(context)
     }
 
     override fun onCreateView(
@@ -54,6 +57,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        navController = findNavController(this)
         val root: View = binding.root
         return root
     }
@@ -121,15 +125,25 @@ class HomeFragment : Fragment() {
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!recyclerView.canScrollVertically(1)) { //1 for down
+                if (viewModel.loading.value!=true&&!recyclerView.canScrollVertically(1)) { //1 for down
                     viewModel.loadMore()
                 }
             }
         })
-        adapter.onItemClick = { product ->
+        adapter.onItemClick = {
 
             // do something with your item
-            product.name?.let { Log.d("TAG", it) }
+            val bundle = Bundle()
+            bundle.putInt("id", it.id!!)
+            bundle.putString("action", "view")
+
+
+            navController.navigate(R.id.navigation_product_detail,bundle)
+
+        }
+
+        adapter.onShoppingCartClick = {
+            Log.d(TAG, it.id.toString())
         }
 
     }
@@ -143,7 +157,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    private class Factory constructor(private val repository: HomeRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: HomeRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {

@@ -24,7 +24,7 @@ class ProductFilters : BaseObservable() {
         }
 
     @get:Bindable
-    var limit:Int = 4
+    var limit:Int = 10
         set(value) {
             field = value
             notifyPropertyChanged(BR.limit)
