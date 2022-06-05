@@ -40,7 +40,7 @@
                 android:id="@+id/productImage"
                 android:layout_width="match_parent"
                 android:layout_height="194dp"
-                android:src="@drawable/ic_home_black_24dp"
+                android:src="@mipmap/ic_image_placeholder_foreground"
                 android:scaleType="centerCrop"
 
                 />

@@ -1,114 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
+    >
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.vt6002cem.ui.productDetail.ProductDetailViewModel" />
+    </data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment"
-    android:background="@color/about_bg_color"
     >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/about_bg_color"
+        android:scrollbarStyle="insideInset"
+        android:fillViewport="true"
 
 
+        >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:indeterminate="true"
+            app:indicatorColor="@color/orange"
+            android:visibility="gone"
+         />
+
 
         <ImageView
-            android:layout_width="98dp"
-            android:layout_height="98dp"
-            android:layout_marginTop="80dp"
-            android:src="@drawable/ic_baseline_arrow_back_24" />
-
-
-        <LinearLayout
-
+            android:id="@+id/productImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:padding="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="当前版本"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
-
-        </LinearLayout>
+            android:maxHeight="400dp"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/ic_image_placeholder_foreground" />
 
         <LinearLayout
-            android:id="@+id/lay_app_version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12pt"
             android:background="@color/white"
+            android:orientation="vertical"
             android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:padding="12dp">
+            android:padding="12dp"
+            >
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
-
+                android:text="@{viewModel.product.name}"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="32sp"
+                android:paddingTop="5dp"
+                />
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{'$'+viewModel.product.price.toString()}"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"
+                android:paddingTop="5dp"
+                />
 
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:text="@{viewModel.product.about}"
                 android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textSize="16sp"
+                android:paddingTop="5dp"
+
+                />
+
+
 
         </LinearLayout>
 
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12pt"
             android:background="@color/white"
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="12dp">
 
-            <TextView
-                android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addToShoppingCartBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="当前版本"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:text="@string/addToCart"
+                app:icon="@drawable/ic_baseline_shopping_cart_24" />
 
-            <TextView
+        </LinearLayout>
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12pt"
+            android:background="@color/white"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/lay_search"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_baseline_comment_24" />
+
+                    <EditText
+                        android:id="@+id/et_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:background="@null"
+                        android:hint="@string/comment"
+                        android:imeOptions="actionSend"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textCursorDrawable="@drawable/custom_cursor"
+
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_clear"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_baseline_close_24"
+                        android:visibility="gone"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commentList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/fragment_product_comment_card" />
+
 
         </LinearLayout>
 
 
     </LinearLayout>
-
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

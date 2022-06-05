@@ -1,4 +1,4 @@
-package com.example.vt6002cem.ui.productDetail
+package com.example.vt6002cem.ui.shoppingCart
 
 
 import android.content.Intent
@@ -19,6 +19,7 @@ import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.FragmentProductDetailBinding
 import com.example.vt6002cem.databinding.FragmentSettingsBinding
+import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
 import com.example.vt6002cem.ui.home.HomeRepository
 import com.example.vt6002cem.ui.home.HomeViewModel
 import com.example.vt6002cem.ui.login.LoginActivity
@@ -28,15 +29,15 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
-class ProductDetailFragment : Fragment() {
+class ShoppingCartFragment : Fragment() {
 
-    private lateinit var binding: FragmentProductDetailBinding
+    private lateinit var binding: FragmentShoppingCartBinding
 
     private lateinit var auth: FirebaseAuth
     private lateinit var navigation:BottomNavigationView
     private  var id: Int? = null
     private  var action: String? = null
-    private  lateinit var viewModel:ProductDetailViewModel
+    private  lateinit var viewModel:ShoppingCartViewModel
 
     private var TAG = "Home"
     fun loading(){
@@ -72,7 +73,7 @@ class ProductDetailFragment : Fragment() {
         arguments?.let { id = it.getInt("id") }
         arguments?.let { action = it.getString("action") }
 
-        binding = FragmentProductDetailBinding.inflate(inflater, container, false)
+        binding = FragmentShoppingCartBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
         navigation =requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
 
@@ -82,23 +83,17 @@ class ProductDetailFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
-            val retrofitService = ProductsApiService.getInstance(it.result.token)
-            val repository = Factory(ProductDetailRepository(retrofitService))
-
-            viewModel = ViewModelProvider(this,repository).get(ProductDetailViewModel::class.java)
-            initObserve()
-            viewModel.getProduct(id!!)
-            binding.let {
-
-                Glide.with(this)
-                    .load(Config.imageUrl+id)
-                    .placeholder(R.mipmap.ic_image_placeholder_foreground)
-                    .into(it.productImage)
-            }
-            //binding.viewModel = viewModel
-
-        }
+//        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+//            val retrofitService = ProductsApiService.getInstance(it.result.token)
+//            val repository = Factory(ShoppingCartRepository(retrofitService))
+//
+//            viewModel = ViewModelProvider(this,repository).get(ShoppingCartViewModel::class.java)
+//            initObserve()
+//            viewModel.getProduct(id!!)
+//
+//            //binding.viewModel = viewModel
+//
+//        }
 
     }
 
@@ -121,11 +116,11 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    inner class Factory constructor(private val repository: ProductDetailRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: ShoppingCartRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-                ProductDetailViewModel(this.repository) as T
+            return if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
+                ShoppingCartViewModel(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

@@ -26,5 +26,8 @@
     <string name="loading_message">Loading...</string>
     <string name="search">Search</string>
     <string name="addToCart">Add to cart</string>
+    <string name="comment">Comment</string>
+    <string name="checkOut">Check Out</string>
+    <string name="title_soppingCart">Shopping Cart</string>
 
 </resources>

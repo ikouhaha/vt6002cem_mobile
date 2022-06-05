@@ -25,8 +25,8 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.vt6002cem.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="com.example.vt6002cem.ui.shoppingCart.ShoppingCartFragment"
+        android:label="@string/title_soppingCart"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment

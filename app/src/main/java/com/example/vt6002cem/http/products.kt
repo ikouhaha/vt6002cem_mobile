@@ -19,7 +19,7 @@ interface ProductsApiService {
         @Query("limit") limit: Int
     ): Response<ArrayList<Product>>
 
-    @GET("product/{id}")
+    @GET("products/{id}")
     suspend fun loadProductById(
         @Path("id") id:Int,
     ): Response<Product>
@@ -27,7 +27,6 @@ interface ProductsApiService {
 
     companion object {
         var api: ProductsApiService? = null
-
         fun getInstance(token: String?): ProductsApiService {
             if (api == null) {
 

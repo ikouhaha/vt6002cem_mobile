@@ -10,6 +10,7 @@
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.181" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.295" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_image_placeholder_background.xml" value="0.248" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_launcher_background.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/stroke_color.xml" value="0.248" />
@@ -22,8 +23,11 @@
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home_card.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home_list.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_product_comment_card.xml" value="0.17239583333333333" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_product_detail.xml" value="0.3046875" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_shopping_cart.xml" value="0.3046875" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_shopping_cart_card.xml" value="0.3046875" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_signin.xml" value="0.2689873417721519" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_signup.xml" value="0.19635416666666666" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/view_card.xml" value="0.11510416666666666" />
