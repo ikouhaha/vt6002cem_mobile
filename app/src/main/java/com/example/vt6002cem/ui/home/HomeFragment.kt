@@ -16,21 +16,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.lang.reflect.Array
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private  lateinit var viewModel:HomeViewModel
+    private  var viewModel:HomeViewModel? = null
     private  lateinit  var adapter:HomeProductAdapter
     private  lateinit var  navController: NavController
     private var TAG = "Home"
+    private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
+
+
     fun loading(){
         binding.indicator.show()
 
@@ -65,16 +72,25 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener {
-            val retrofitService = ProductsApiService.getInstance(it.result.token)
+        if(Firebase.auth.currentUser==null){
+            val retrofitService = ProductsApiService.getInstance("")
             val repository = Factory(ProductRepository(retrofitService))
             binding.recyclerview.adapter = adapter
-            viewModel = ViewModelProvider(this,repository).get(HomeViewModel::class.java)
+            viewModel = ViewModelProvider(this,repository)[HomeViewModel::class.java]
             initObserve()
+            viewModel?.getProducts()
+        }else{
+            Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener {
+                val retrofitService = ProductsApiService.getInstance(it.result.token)
+                val repository = Factory(ProductRepository(retrofitService))
+                binding.recyclerview.adapter = adapter
+                viewModel = ViewModelProvider(this,repository)[HomeViewModel::class.java]
+                initObserve()
+                viewModel?.getProducts()
 
-            viewModel.getProducts()
+            }
         }
+
 
 
     }
@@ -87,19 +103,22 @@ class HomeFragment : Fragment() {
     }
     fun initObserve(){
         // add observer
-        viewModel.productList.observe(this) {
-            adapter.setProductList(it)
-        }
-        viewModel.errorMessage.observe(this){
-            Toast.makeText(activity,it,Toast.LENGTH_SHORT).show()
-        }
-        viewModel.loading.observe(this){
-            if(it){
-                loading()
-            }else{
-                done()
+        viewModel?.let {
+            it.productList.observe(this) {
+                adapter.setProductList(it)
+            }
+            it.errorMessage.observe(this){
+                Toast.makeText(activity,it,Toast.LENGTH_SHORT).show()
+            }
+            it.loading.observe(this){
+                if(it){
+                    loading()
+                }else{
+                    done()
+                }
             }
         }
+
         binding.ivClear.setOnClickListener {
             binding.etSearch.text = null
         }
@@ -114,21 +133,24 @@ class HomeFragment : Fragment() {
         binding.etSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel.search(v.editableText)
+                viewModel?.search(v.editableText)
                 cancelFocus(binding.etSearch)
                 handled = true
             }
             handled
         })
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshList()
+            viewModel?.refreshList()
         }
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (viewModel.loading.value!=true&&!recyclerView.canScrollVertically(1)) { //1 for down
-                    viewModel.loadMore()
+                viewModel?.let {
+                    if (it.loading.value!=true&&!recyclerView.canScrollVertically(1)) { //1 for down
+                        it.loadMore()
+                    }
                 }
+
             }
         })
         adapter.onItemClick = {
@@ -137,21 +159,23 @@ class HomeFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", it.id!!)
             bundle.putString("action", "view")
-
-
             navController.navigate(R.id.navigation_product_detail,bundle)
 
         }
 
-        adapter.onShoppingCartClick = {
-            Log.d(TAG, it.id.toString())
+        adapter.onShoppingCartClick = { product ->
+            Log.d(TAG, product.id.toString())
+            Firebase.auth.currentUser?.let {user->
+
+                database.getReference("${user.uid}/cart/${product.id}").setValue(true)
+            }
         }
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.clearList()
+        viewModel?.clearList()
     }
 
     fun viewDetail(view:View){

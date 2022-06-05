@@ -24,10 +24,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_shopping_cart"
         android:name="com.example.vt6002cem.ui.shoppingCart.ShoppingCartFragment"
         android:label="@string/title_soppingCart"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_shopping_cart" />
 
     <fragment
         android:id="@+id/navigation_notifications"

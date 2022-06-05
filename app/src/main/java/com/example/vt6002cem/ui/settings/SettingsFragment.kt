@@ -62,13 +62,7 @@ class SettingsFragment : Fragment() {
             textView.text = it
         }
 
-        navigation =requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
 
-        _binding?.textButton?.setOnClickListener {
-            auth?.signOut()
-            navigation?.selectedItemId = R.id.navigation_home
-
-        };
 
         return root
     }
