@@ -10,8 +10,8 @@
     <data>
 
         <variable
-            name="comment"
-            type="com.example.vt6002cem.model.Comment" />
+            name="product"
+            type="com.example.vt6002cem.model.Product" />
     </data>
 
     <LinearLayout
@@ -57,31 +57,27 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{comment.commentBy.displayName}"
+                        android:text="@{product.name}"
                         android:textAppearance="?attr/textAppearanceHeadline6" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{comment.commentDate.toString()}"
+                        android:text="@{'$'+product.price.toString()}"
                         android:textAppearance="?attr/textAppearanceBody2"
                         android:textColor="?android:attr/textColorSecondary"
                         />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@{'$'+comment.comment}"
-                     />
-
-
-
-
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="8dp"-->
+<!--                        android:text="@{'$'+comment.comment}"-->
+<!--                     />-->
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/iv_clear"
+                    android:id="@+id/clearItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"

@@ -4,9 +4,10 @@ import android.text.Editable
 import androidx.lifecycle.*
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.model.ProductFilters
+import com.example.vt6002cem.repositroy.ProductRepository
 import kotlinx.coroutines.*
 
-class HomeViewModel constructor(private val repository: HomeRepository): ViewModel() {
+class HomeViewModel constructor(private val repository: ProductRepository): ViewModel() {
 
     var productList= MutableLiveData<ArrayList<Product>>()
     var filters= MutableLiveData<ProductFilters>(ProductFilters())
@@ -74,7 +75,6 @@ class HomeViewModel constructor(private val repository: HomeRepository): ViewMod
         filters.value?.searchText = if (s.isNullOrEmpty()) null else s.toString()
         getProducts()
     }
-
 
     private fun onError(message: String) {
         errorMessage.postValue(message)

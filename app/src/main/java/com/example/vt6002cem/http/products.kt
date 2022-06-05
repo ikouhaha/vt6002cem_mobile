@@ -24,6 +24,10 @@ interface ProductsApiService {
         @Path("id") id:Int,
     ): Response<Product>
 
+    @GET("products/ids")
+    suspend fun loadProductByIds(
+        @Query("id") id:Array<Int>,
+    ): Response<ArrayList<Product>>
 
     companion object {
         var api: ProductsApiService? = null

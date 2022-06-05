@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,11 +14,8 @@ import com.bumptech.glide.Glide
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.adpater.ProductsApiService
-import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.FragmentProductDetailBinding
-import com.example.vt6002cem.databinding.FragmentSettingsBinding
-import com.example.vt6002cem.ui.home.HomeRepository
-import com.example.vt6002cem.ui.home.HomeViewModel
+import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -84,7 +79,7 @@ class ProductDetailFragment : Fragment() {
 
         Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
             val retrofitService = ProductsApiService.getInstance(it.result.token)
-            val repository = Factory(ProductDetailRepository(retrofitService))
+            val repository = Factory(ProductRepository(retrofitService))
 
             viewModel = ViewModelProvider(this,repository).get(ProductDetailViewModel::class.java)
             initObserve()
@@ -121,7 +116,7 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    inner class Factory constructor(private val repository: ProductDetailRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: ProductRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {

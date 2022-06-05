@@ -16,6 +16,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/about_bg_color"
     tools:context=".ui.shoppingCart.ShoppingCartFragment"
     >
 
@@ -32,7 +33,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/about_bg_color"
+
         android:fillViewport="true"
         android:scrollbarStyle="insideInset"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,26 +42,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="12dp">
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/cartList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/fragment_shopping_cart_card" />
 
 
@@ -69,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12pt"
                     android:background="@color/white"
-                    android:foreground="?android:attr/selectableItemBackground"
+
                     android:gravity="center_vertical"
                     android:padding="12dp">
 
@@ -78,13 +73,13 @@
                         style="?attr/borderlessButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:text="@string/checkOut"
                         app:icon="@drawable/ic_baseline_shopping_cart_24" />
 
                 </LinearLayout>
 
 
-            </LinearLayout>
 
 
         </LinearLayout>

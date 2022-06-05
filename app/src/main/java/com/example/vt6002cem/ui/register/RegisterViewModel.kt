@@ -14,13 +14,14 @@ import com.example.vt6002cem.adpater.AuthApiService
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.common.Validations
 import com.example.vt6002cem.model.User
+import com.example.vt6002cem.repositroy.UserRepository
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RegisterViewModel constructor(private val repository: RegisterRepository) : ViewModel() {
+class RegisterViewModel constructor(private val repository: UserRepository) : ViewModel() {
     var user: MutableLiveData<User> = MutableLiveData(User())
     val formErrors = ObservableArrayList<String>()
     val loading = MutableLiveData<Boolean>()

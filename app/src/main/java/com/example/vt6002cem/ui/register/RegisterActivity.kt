@@ -1,6 +1,5 @@
 package com.example.vt6002cem.ui.register
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
@@ -9,37 +8,24 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.vt6002cem.Config
 import com.example.vt6002cem.MainActivity
-import com.example.vt6002cem.adpater.AuthApiService
-import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.adpater.UserApiService
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityRegisterBinding
 import com.example.vt6002cem.model.User
-import com.example.vt6002cem.ui.home.HomeRepository
-import com.example.vt6002cem.ui.home.HomeViewModel
+import com.example.vt6002cem.repositroy.UserRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.random.Random
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var oneTapClient: SignInClient
@@ -151,7 +137,7 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val retrofitService = UserApiService.getInstance()
-        val repository = Factory(RegisterRepository(retrofitService))
+        val repository = Factory(UserRepository(retrofitService))
         viewModel = ViewModelProvider(this,repository).get(RegisterViewModel::class.java)
         initObserve()
         binding.viewModel = viewModel
@@ -204,7 +190,7 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private class Factory constructor(private val repository: RegisterRepository): ViewModelProvider.Factory {
+    private class Factory constructor(private val repository: UserRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {

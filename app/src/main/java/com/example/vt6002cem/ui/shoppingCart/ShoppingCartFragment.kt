@@ -6,22 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.adpater.ProductsApiService
-import com.example.vt6002cem.common.Helper
-import com.example.vt6002cem.databinding.FragmentProductDetailBinding
-import com.example.vt6002cem.databinding.FragmentSettingsBinding
 import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
-import com.example.vt6002cem.ui.home.HomeRepository
-import com.example.vt6002cem.ui.home.HomeViewModel
+import com.example.vt6002cem.repositroy.ProductRepository
+import com.example.vt6002cem.ui.home.HomeProductAdapter
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -38,6 +31,7 @@ class ShoppingCartFragment : Fragment() {
     private  var id: Int? = null
     private  var action: String? = null
     private  lateinit var viewModel:ShoppingCartViewModel
+    private  lateinit  var adapter: ShoppingCartAdapter
 
     private var TAG = "Home"
     fun loading(){
@@ -63,6 +57,7 @@ class ShoppingCartFragment : Fragment() {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
         }
+        adapter = ShoppingCartAdapter(context)
     }
 
     override fun onCreateView(
@@ -83,17 +78,17 @@ class ShoppingCartFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-//        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
-//            val retrofitService = ProductsApiService.getInstance(it.result.token)
-//            val repository = Factory(ShoppingCartRepository(retrofitService))
-//
-//            viewModel = ViewModelProvider(this,repository).get(ShoppingCartViewModel::class.java)
-//            initObserve()
-//            viewModel.getProduct(id!!)
-//
-//            //binding.viewModel = viewModel
-//
-//        }
+        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+            val retrofitService = ProductsApiService.getInstance(it.result.token)
+            val repository = Factory(ProductRepository(retrofitService))
+            binding.cartList.adapter = adapter
+            viewModel = ViewModelProvider(this,repository).get(ShoppingCartViewModel::class.java)
+            initObserve()
+            viewModel.getProducts(arrayOf(1,2))
+
+            //binding.viewModel = viewModel
+
+        }
 
     }
 
@@ -103,6 +98,9 @@ class ShoppingCartFragment : Fragment() {
     }
 
     fun initObserve(){
+        viewModel.productList.observe(this){
+            adapter.setProductList(it)
+        }
         viewModel.errorMessage.observe(this){
             Toast.makeText(activity,it, Toast.LENGTH_SHORT).show()
         }
@@ -111,12 +109,11 @@ class ShoppingCartFragment : Fragment() {
                 loading()
             }else{
                 done()
-                binding.viewModel = viewModel
             }
         }
     }
 
-    inner class Factory constructor(private val repository: ShoppingCartRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: ProductRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {

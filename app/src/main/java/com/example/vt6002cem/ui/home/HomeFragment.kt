@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.vt6002cem.R
 import com.example.vt6002cem.adpater.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
+import com.example.vt6002cem.repositroy.ProductRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -67,7 +68,7 @@ class HomeFragment : Fragment() {
 
         Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener {
             val retrofitService = ProductsApiService.getInstance(it.result.token)
-            val repository = Factory(HomeRepository(retrofitService))
+            val repository = Factory(ProductRepository(retrofitService))
             binding.recyclerview.adapter = adapter
             viewModel = ViewModelProvider(this,repository).get(HomeViewModel::class.java)
             initObserve()
@@ -157,7 +158,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    inner class Factory constructor(private val repository: HomeRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: ProductRepository): ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
