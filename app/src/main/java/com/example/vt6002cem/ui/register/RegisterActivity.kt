@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.vt6002cem.MainActivity
-import com.example.vt6002cem.adpater.UserApiService
+import com.example.vt6002cem.http.UserApiService
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityRegisterBinding
 import com.example.vt6002cem.model.User
@@ -136,7 +136,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val retrofitService = UserApiService.getInstance()
+        val retrofitService = UserApiService.getInstance(null)
         val repository = Factory(UserRepository(retrofitService))
         viewModel = ViewModelProvider(this,repository).get(RegisterViewModel::class.java)
         initObserve()

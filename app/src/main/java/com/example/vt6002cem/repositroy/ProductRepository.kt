@@ -1,6 +1,6 @@
 package com.example.vt6002cem.repositroy;
 
-import com.example.vt6002cem.adpater.ProductsApiService;
+import com.example.vt6002cem.http.ProductsApiService;
 import com.example.vt6002cem.model.ProductFilters
 
 class ProductRepository constructor(private val retrofitService: ProductsApiService) {

@@ -18,14 +18,12 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
-import com.example.vt6002cem.adpater.ProductsApiService
+import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.lang.reflect.Array
 
 
 class HomeFragment : Fragment() {
@@ -73,28 +71,22 @@ class HomeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         if(Firebase.auth.currentUser==null){
-            val retrofitService = ProductsApiService.getInstance("")
-            val repository = Factory(ProductRepository(retrofitService))
-            binding.recyclerview.adapter = adapter
-            viewModel = ViewModelProvider(this,repository)[HomeViewModel::class.java]
-            initObserve()
-            viewModel?.getProducts()
+            init(null)
         }else{
             Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener {
-                val retrofitService = ProductsApiService.getInstance(it.result.token)
-                val repository = Factory(ProductRepository(retrofitService))
-                binding.recyclerview.adapter = adapter
-                viewModel = ViewModelProvider(this,repository)[HomeViewModel::class.java]
-                initObserve()
-                viewModel?.getProducts()
-
+                init(it.result.token)
             }
         }
-
-
-
     }
 
+    fun init(token:String?){
+        val retrofitService = ProductsApiService.getInstance(token)
+        val repository = Factory(ProductRepository(retrofitService))
+        binding.recyclerview.adapter = adapter
+        viewModel = ViewModelProvider(this,repository)[HomeViewModel::class.java]
+        initObserve()
+        viewModel?.getProducts()
+    }
 
     fun cancelFocus(v:View){
         val imm =

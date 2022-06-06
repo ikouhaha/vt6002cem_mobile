@@ -29,5 +29,13 @@
     <string name="comment">Comment</string>
     <string name="checkOut">Check Out</string>
     <string name="title_soppingCart">Shopping Cart</string>
+    <string name="save">Save</string>
+    <string name="changePwd">Change Password</string>
+    <string name="changeProfile">Change Profile</string>
+    <string name="displayNameRequired">Display Name*</string>
+    <string name="companyCodeRequired">Company Code*</string>
+    <string name="user">User</string>
+    <string name="staff">Staff</string>
+    <string name="avatar">Avatar</string>
 
 </resources>

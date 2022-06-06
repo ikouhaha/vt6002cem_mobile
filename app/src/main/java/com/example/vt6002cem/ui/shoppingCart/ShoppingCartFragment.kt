@@ -13,17 +13,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
-import com.example.vt6002cem.adpater.ProductsApiService
+import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
-import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
-import com.example.vt6002cem.ui.home.HomeProductAdapter
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 

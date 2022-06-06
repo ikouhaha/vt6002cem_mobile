@@ -6,12 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.vt6002cem.R
-import com.example.vt6002cem.common.Helper
+import com.example.vt6002cem.http.UserApiService
 import com.example.vt6002cem.databinding.FragmentSettingsBinding
+import com.example.vt6002cem.repositroy.UserRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -21,14 +25,30 @@ import com.google.firebase.ktx.Firebase
 
 class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentSettingsBinding? = null
+    private var binding: FragmentSettingsBinding? = null
     private var _token = ""
     private lateinit var auth: FirebaseAuth
     private lateinit var navigation:BottomNavigationView
-
+    private  var viewModel: SettingsViewModel? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+
+    fun loading(){
+        binding?.indicator?.show()
+
+        activity?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    fun done(){
+        binding?.indicator?.hide()
+        activity?.window?.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        )
+
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,29 +67,72 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
-        _token = Helper.getStoreString(this.context, "token")
-
-        val settingsViewModel =
-            ViewModelProvider(this).get(SettingsViewModel::class.java)
-
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textSettings
-        settingsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-
-
-
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        val root: View = binding!!.root
         return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+
+    override fun onStart() {
+        super.onStart()
+
+        if(Firebase.auth.currentUser==null){
+            init(null)
+        }else{
+            Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+                init(it.result.token)
+            }
+        }
+    }
+
+    fun init(token:String?){
+        val retrofitService = UserApiService.getInstance(token)
+        val repository = Factory(UserRepository(retrofitService))
+        viewModel = ViewModelProvider(this,repository)[SettingsViewModel::class.java]
+        binding!!.viewModel = viewModel
+        initObserve()
+        viewModel?.getProfile()
+
+    }
+    fun initObserve() {
+        viewModel?.let {
+
+            it.errorMessage.observe(this){msg->
+                Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+            }
+            it.loading.observe(this){
+                if(it){
+                    loading()
+                }else{
+                    done()
+                }
+            }
+            it.user.observe(this){
+                binding!!.viewModel = viewModel
+                Glide.with(this)
+                    .load(it.avatarUrl)
+                    .placeholder(R.mipmap.ic_image_placeholder_foreground)
+                    .into(binding!!.avatarImg)
+                if(it.role=="user"){
+                    binding!!.radioGroup.check(R.id.user)
+                }else if(it.role=="staff"){
+                    binding!!.radioGroup.check(R.id.staff)
+                }
+            }
+        }
+
+    }
+
+
+    inner class Factory constructor(private val repository: UserRepository): ViewModelProvider.Factory {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+                SettingsViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
     }
 
 

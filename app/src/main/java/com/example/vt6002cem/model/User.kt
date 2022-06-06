@@ -16,6 +16,13 @@ import kotlinx.serialization.encoding.*
 class User : BaseObservable() {
 
     @get:Bindable
+    var id: Int? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.id)
+        }
+
+    @get:Bindable
     var email: String? = null
         set(value) {
             field = value

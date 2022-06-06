@@ -1,4 +1,4 @@
-package com.example.vt6002cem.adpater
+package com.example.vt6002cem.http
 
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.common.Helper
@@ -12,22 +12,28 @@ import retrofit2.http.*
 interface UserApiService {
     @POST("users")
     suspend fun createUser(@Body user:User): Response<Object>
-
+    @PUT("users/p/{id}")
+    suspend fun changePwd(@Path("id") id:Int,@Body user:User): Response<Object>
+    @PUT("users/{id}")
+    suspend fun changeProfile(@Path("id") id:Int,@Body user:User): Response<Object>
+    @GET("users/profile")
+    suspend fun getProfile(): Response<User>
 
     companion object {
         var api: UserApiService? = null
-        fun getInstance() : UserApiService {
+        fun getInstance(token:String?) : UserApiService {
             if (api == null) {
+                var client =
+                    if (token != null) Helper.getHttpTokenClient(token) else Helper.getHttpClient()
                 val retrofit = Retrofit.Builder()
                     .baseUrl(Config.apiUrl)
-                    .client(Helper.getHttpClient())
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 api = retrofit.create(UserApiService::class.java)
             }
             return api!!
         }
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.vt6002cem.adpater
+package com.example.vt6002cem.http
 
 import com.example.vt6002cem.model.User
 import retrofit2.Response

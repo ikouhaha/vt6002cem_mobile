@@ -1,12 +1,13 @@
 package com.example.vt6002cem
 
+
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NavUtils
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,7 +18,6 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 
@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.navigation_home, R.id.navigation_shopping_cart, R.id.navigation_notifications,R.id.navigation_settings
             )
+
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -80,15 +81,7 @@ class MainActivity : AppCompatActivity() {
         notificationBadge.isVisible = false
 
         cartBadge = navView.getOrCreateBadge(R.id.navigation_shopping_cart)
-
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true);
-            it.setDisplayUseLogoEnabled(true);
-            it.setLogo(R.drawable.ic_baseline_comment_24);
-        }
-
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -112,4 +105,9 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.navigation_home)
         }
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.bottom_nav_menu, menu);
+//        return true;
+//    }
 }

@@ -34,8 +34,6 @@
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp">
 
@@ -117,7 +115,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToShoppingCartBtn"
                 style="?attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
+                android:layout_width="386dp"
                 android:layout_height="wrap_content"
                 android:text="@string/addToCart"
                 app:icon="@drawable/ic_baseline_shopping_cart_24" />

@@ -1,10 +1,8 @@
-package com.example.vt6002cem.adpater
+package com.example.vt6002cem.http
 
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.model.Product
-import com.example.vt6002cem.model.ProductFilters
-import com.example.vt6002cem.model.User
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

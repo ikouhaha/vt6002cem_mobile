@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
-import com.example.vt6002cem.adpater.ProductsApiService
+import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentProductDetailBinding
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
@@ -76,25 +76,29 @@ class ProductDetailFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
-            val retrofitService = ProductsApiService.getInstance(it.result.token)
-            val repository = Factory(ProductRepository(retrofitService))
-
-            viewModel = ViewModelProvider(this,repository).get(ProductDetailViewModel::class.java)
-            initObserve()
-            viewModel.getProduct(id!!)
-            binding.let {
-
-                Glide.with(this)
-                    .load(Config.imageUrl+id)
-                    .placeholder(R.mipmap.ic_image_placeholder_foreground)
-                    .into(it.productImage)
+        if(Firebase.auth.currentUser==null){
+            init(null)
+        }else{
+            Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+                init(it.result.token)
             }
-            //binding.viewModel = viewModel
-
         }
+    }
 
+    fun init(token:String?){
+        val retrofitService = ProductsApiService.getInstance(token)
+        val repository = Factory(ProductRepository(retrofitService))
+
+        viewModel = ViewModelProvider(this,repository).get(ProductDetailViewModel::class.java)
+        initObserve()
+        viewModel.getProduct(id!!)
+        binding.let {
+
+            Glide.with(this)
+                .load(Config.imageUrl+id)
+                .placeholder(R.mipmap.ic_image_placeholder_foreground)
+                .into(it.productImage)
+        }
     }
 
     override fun onDestroyView() {

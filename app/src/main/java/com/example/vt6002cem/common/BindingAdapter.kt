@@ -11,6 +11,13 @@ fun emailValidator(view: TextInputLayout, input:String?) {
     }
 
 }
+@BindingAdapter("textValidator")
+fun textValidator(view: TextInputLayout, input:String?) {
+    if(input!=null){
+        view.error  = Validations.text(input)
+    }
+
+}
 @BindingAdapter("passwordValidator")
 fun passwordValidator(view: TextInputLayout, input:String?) {
     if(input!=null){
@@ -26,3 +33,4 @@ fun confirmPasswordValidator(view: TextInputLayout, confirmPwd:String?, pwd:Stri
     }
 
 }
+

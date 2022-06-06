@@ -39,6 +39,7 @@ class HomeProductAdapter (private val context: Context?) : RecyclerView.Adapter<
         holder.binding.position = position
 
             val url: String = Config.imageUrl+product.id
+
         context?.let {
             Glide.with(it)
                 .load(url)
