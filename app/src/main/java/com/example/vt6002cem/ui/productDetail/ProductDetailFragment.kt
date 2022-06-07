@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.http.ProductsApiService
@@ -96,6 +97,7 @@ class ProductDetailFragment : Fragment() {
 
             Glide.with(this)
                 .load(Config.imageUrl+id)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.mipmap.ic_image_placeholder_foreground)
                 .into(it.productImage)
         }

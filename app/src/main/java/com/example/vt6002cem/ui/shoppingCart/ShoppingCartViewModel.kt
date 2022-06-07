@@ -10,14 +10,15 @@ class ShoppingCartViewModel (private val repository: ProductRepository) : ViewMo
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     var productList= MutableLiveData<ArrayList<Product>>()
+    var ids= MutableLiveData<Array<Int>>()
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")
     }
-    fun getProducts(ids:Array<Int>){
+    fun getProducts(){
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             loading.postValue(true)
-            val response = repository.getProdcutByIds(ids)
+            val response = repository.getProdcutByIds(ids.value!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     response.body()?.let {

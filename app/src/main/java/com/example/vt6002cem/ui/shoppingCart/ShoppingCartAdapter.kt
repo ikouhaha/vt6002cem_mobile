@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.Target
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
@@ -42,6 +43,7 @@ class ShoppingCartAdapter (private val context: Context?) : RecyclerView.Adapter
         context?.let {
             Glide.with(it)
                 .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.mipmap.ic_image_placeholder_foreground)
                 .into(holder.binding.productImage)
         }

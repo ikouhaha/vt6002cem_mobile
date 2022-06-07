@@ -48,9 +48,10 @@ class ShoppingCartFragment : Fragment() {
                     arr.add(key.toInt())
                 }
             }
-            viewModel.getProducts(arr.toTypedArray())
-
-
+            viewModel.apply {
+                ids.postValue(arr.toTypedArray())
+                getProducts()
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -130,8 +131,18 @@ class ShoppingCartFragment : Fragment() {
     }
 
     fun initObserve() {
+
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
+            viewModel.ids.value?.let {array->
+                for(id in array){
+                    val find = it.find { product->product.id==id}
+                    if(find==null){
+                        database.getReference("${Firebase.auth.currentUser!!.uid}/cart/${id}").removeValue()
+                    }
+                }
+            }
+
         }
         viewModel.errorMessage.observe(this) {msg->
             if(!msg.isNullOrEmpty()){
@@ -146,6 +157,7 @@ class ShoppingCartFragment : Fragment() {
                 done()
             }
         }
+
 
         adapter.onDeleteShoppingCartClick = { product ->
 
