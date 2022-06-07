@@ -33,9 +33,14 @@
     <string name="changePwd">Change Password</string>
     <string name="changeProfile">Change Profile</string>
     <string name="displayNameRequired">Display Name*</string>
+    <string name="NameRequired">Name*</string>
     <string name="companyCodeRequired">Company Code*</string>
     <string name="user">User</string>
     <string name="staff">Staff</string>
     <string name="avatar">Avatar</string>
+    <string name="createPost">Create Post</string>
+    <string name="create">Create</string>
+    <string name="DescriptionRequired">Description*</string>
+    <string name="priceRequired">Price*</string>
 
 </resources>

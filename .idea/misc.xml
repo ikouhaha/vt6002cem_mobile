@@ -5,8 +5,10 @@
       <map>
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/custom_cursor.xml" value="0.1915" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_drive_file_rename_outline_24.xml" value="0.225" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.261" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.225" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.181" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.295" />
@@ -19,6 +21,7 @@
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_main.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_product_detail.xml" value="0.17135416666666667" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_register.xml" value="0.21041666666666667" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_create_post.xml" value="0.302536231884058" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_dashboard.xml" value="0.146875" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home_card.xml" value="0.3333333333333333" />

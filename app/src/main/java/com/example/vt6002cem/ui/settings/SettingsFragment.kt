@@ -3,11 +3,13 @@ package com.example.vt6002cem.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,12 +32,16 @@ class SettingsFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var navigation:BottomNavigationView
     private  var viewModel: SettingsViewModel? = null
+    private val TAG = "SettingsFragment"
     // This property is only valid between onCreateView and
     // onDestroyView.
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel = null
+    }
 
     fun loading(){
         binding?.indicator?.show()
-
         activity?.window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -79,7 +85,9 @@ class SettingsFragment : Fragment() {
         if(Firebase.auth.currentUser==null){
             init(null)
         }else{
-            Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+            Firebase.auth.currentUser?.getIdToken(false)?.addOnCompleteListener { it ->
+
+                Log.d(TAG,it.result.token.toString())
                 init(it.result.token)
             }
         }
@@ -96,9 +104,11 @@ class SettingsFragment : Fragment() {
     }
     fun initObserve() {
         viewModel?.let {
-
             it.errorMessage.observe(this){msg->
-                Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+                if(!msg.isNullOrEmpty()){
+                    Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+                    it.errorMessage.postValue(null)
+                }
             }
             it.loading.observe(this){
                 if(it){
@@ -117,6 +127,7 @@ class SettingsFragment : Fragment() {
                     binding!!.radioGroup.check(R.id.user)
                 }else if(it.role=="staff"){
                     binding!!.radioGroup.check(R.id.staff)
+
                 }
             }
         }

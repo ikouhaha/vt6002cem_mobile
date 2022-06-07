@@ -21,17 +21,17 @@ interface UserApiService {
 
     companion object {
         var api: UserApiService? = null
-        fun getInstance(token:String?) : UserApiService {
-            if (api == null) {
-                var client =
-                    if (token != null) Helper.getHttpTokenClient(token) else Helper.getHttpClient()
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(Config.apiUrl)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                api = retrofit.create(UserApiService::class.java)
-            }
+        fun getInstance(token: String?): UserApiService {
+
+            var client =
+                if (token != null) Helper.getHttpTokenClient(token) else Helper.getHttpClient()
+            val retrofit = Retrofit.Builder()
+                .baseUrl(Config.apiUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            api = retrofit.create(UserApiService::class.java)
+
             return api!!
         }
     }

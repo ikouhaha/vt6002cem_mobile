@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -185,9 +186,43 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
+
     fun goToLogin(view: View) {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+    }
+
+    fun signup(view: View) {
+        if(viewModel.isFormValid()){
+            loading()
+            viewModel.user.value?.let {user->
+                auth.createUserWithEmailAndPassword(user.email!!,user.password!!).addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        lifecycleScope.launch {
+                            var firebaseUser = auth.currentUser!!
+                            var user = User()
+                            user.email = firebaseUser.email
+                            user.password = viewModel.user.value?.password
+                            user.displayName = firebaseUser.displayName
+                            user.avatarUrl = firebaseUser.photoUrl?.toString()
+                            user.fid = firebaseUser.uid
+                            user.role = "user" //default
+                            viewModel.signUp(user)
+                            done()
+                        }
+
+                        val intent= Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }.addOnFailureListener { exception ->
+                    done()
+                    Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
+
+                }
+            }
+
+        }
     }
 
     private class Factory constructor(private val repository: UserRepository): ViewModelProvider.Factory {

@@ -30,21 +30,17 @@ interface ProductsApiService {
     companion object {
         var api: ProductsApiService? = null
         fun getInstance(token: String?): ProductsApiService {
-            if (api == null) {
+            var client =
+                if (token != null) Helper.getHttpTokenClient(token) else Helper.getHttpClient()
+            var retrofit = Retrofit.Builder()
+                .baseUrl(Config.apiUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            api = retrofit.create(ProductsApiService::class.java)
 
-                var client =
-                    if (token != null) Helper.getHttpTokenClient(token) else Helper.getHttpClient()
-                var retrofit = Retrofit.Builder()
-                    .baseUrl(Config.apiUrl)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                api = retrofit.create(ProductsApiService::class.java)
-            }
             return api!!
         }
-
-
     }
 
 }

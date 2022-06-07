@@ -24,6 +24,14 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_create_post"
+        android:name="com.example.vt6002cem.ui.post.CreatePostFragment"
+        android:label="@string/createPost"
+        tools:layout="@layout/fragment_create_post" >
+
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_shopping_cart"
         android:name="com.example.vt6002cem.ui.shoppingCart.ShoppingCartFragment"
         android:label="@string/title_soppingCart"

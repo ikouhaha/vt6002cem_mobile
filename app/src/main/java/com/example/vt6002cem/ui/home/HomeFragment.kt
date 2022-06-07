@@ -99,8 +99,12 @@ class HomeFragment : Fragment() {
             it.productList.observe(this) {
                 adapter.setProductList(it)
             }
-            it.errorMessage.observe(this){
-                Toast.makeText(activity,it,Toast.LENGTH_SHORT).show()
+            it.errorMessage.observe(this){msg->
+                if(!msg.isNullOrEmpty()){
+                    Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+                    it.errorMessage.postValue(null)
+                }
+
             }
             it.loading.observe(this){
                 if(it){

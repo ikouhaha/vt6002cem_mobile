@@ -2,13 +2,18 @@ package com.example.vt6002cem.ui.register
 
 
 
+import android.content.Intent
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.vt6002cem.MainActivity
 import com.example.vt6002cem.common.Validations
 import com.example.vt6002cem.model.User
 import com.example.vt6002cem.repositroy.UserRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 
 class RegisterViewModel constructor(private val repository: UserRepository) : ViewModel() {
@@ -37,9 +42,17 @@ class RegisterViewModel constructor(private val repository: UserRepository) : Vi
         return formErrors.isEmpty()
     }
 
-    fun signUp(view: View){
-        if(isFormValid()){
-
+    fun signUp(user:User){
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            val response = repository.createUser(user)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    isSuccessRegister.value = true
+                } else {
+                    isSuccessRegister.value = false
+                    onError("Error : ${response.message()} ")
+                }
+            }
         }
     }
 

@@ -1,8 +1,10 @@
 package com.example.vt6002cem.adpater
 
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.vt6002cem.common.Validations
 import com.google.android.material.textfield.TextInputLayout
+
 
 @BindingAdapter("emailValidator")
 fun emailValidator(view: TextInputLayout, input:String?) {
@@ -15,6 +17,14 @@ fun emailValidator(view: TextInputLayout, input:String?) {
 fun textValidator(view: TextInputLayout, input:String?) {
     if(input!=null){
         view.error  = Validations.text(input)
+    }
+
+}
+
+@BindingAdapter("floatValidator")
+fun floatValidator(view: TextInputLayout, input:Float?) {
+    if(input!=null){
+        view.error  = Validations.float(input)
     }
 
 }
@@ -33,4 +43,16 @@ fun confirmPasswordValidator(view: TextInputLayout, confirmPwd:String?, pwd:Stri
     }
 
 }
+
+//@BindingAdapter("android:text")
+//fun setText(view: TextView, value: Float?) {
+//    if (view.text != null && view.text.toString().isNotEmpty()
+//        && view.text.toString().toFloat() != value
+//    ) {
+//        if(value!=null){
+//            view.text = value.toString()
+//        }
+//
+//    }
+//}
 

@@ -251,7 +251,7 @@
                             android:hint="@string/companyCodeRequired"
                             app:textValidator="@{viewModel.user.companyCode}"
                             app:errorEnabled="true"
-                            android:visibility="@{viewModel.user.role==`staff`?View.VISIBLE:View.GONE}"
+                            android:visibility="@{viewModel.user.role==`user`?View.GONE:View.VISIBLE}"
                             app:helperTextTextColor="@color/design_default_color_error"
                             app:startIconDrawable="@drawable/ic_baseline_person_24">
 
@@ -280,10 +280,7 @@
                             android:layout_height="wrap_content"
                             android:onClick="@{viewModel.changeProfileFormSave}"
                             android:text="@string/save" />
-
                     </LinearLayout>
-
-
                 </LinearLayout>
 
 

@@ -14,6 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.vt6002cem.databinding.ActivityMainBinding
+import com.example.vt6002cem.http.ProductsApiService
+import com.example.vt6002cem.http.UserApiService
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_shopping_cart, R.id.navigation_notifications,R.id.navigation_settings
+                R.id.navigation_home, R.id.navigation_shopping_cart,R.id.navigation_create_post, R.id.navigation_notifications,R.id.navigation_settings
             )
 
         )
@@ -101,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         Firebase.auth.currentUser?.let {
             ref.removeEventListener(_taskListener)
             Firebase.auth.signOut()
-
             navController.navigate(R.id.navigation_home)
         }
     }

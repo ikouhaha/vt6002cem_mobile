@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.vt6002cem.MainActivity
@@ -138,6 +139,19 @@ class LoginActivity : AppCompatActivity() {
 
     fun login(view: View) {
         if(viewModel.isFormValid()){
+            viewModel.user.value?.let {user->
+                auth.signInWithEmailAndPassword(user.email!!,user.password!!).addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        val intent= Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }.addOnFailureListener { exception ->
+
+                    Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
+
+                }
+            }
 
         }
     }

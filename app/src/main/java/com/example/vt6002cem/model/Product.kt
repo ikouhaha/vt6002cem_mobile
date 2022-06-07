@@ -3,9 +3,7 @@ package com.example.vt6002cem.model
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-
 import com.example.vt6002cem.BR
-
 
 
 class Product : BaseObservable() {
@@ -25,11 +23,12 @@ class Product : BaseObservable() {
         }
 
     @get:Bindable
-    var price: Number? = null
+    var price: Float? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.price)
         }
+
     @get:Bindable
     var about: String? = null
         set(value) {
@@ -44,4 +43,13 @@ class Product : BaseObservable() {
             notifyPropertyChanged(BR.imageBase64)
         }
 
+    @Bindable
+    fun getPriceString(): String {
+        return price.toString()
+    }
+
+    fun setPriceString(value: String) {
+        val v = value.toFloat()
+        this.price = v
+    }
 }

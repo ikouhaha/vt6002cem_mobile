@@ -133,8 +133,11 @@ class ShoppingCartFragment : Fragment() {
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
         }
-        viewModel.errorMessage.observe(this) {
-            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+        viewModel.errorMessage.observe(this) {msg->
+            if(!msg.isNullOrEmpty()){
+                Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+                viewModel.errorMessage.postValue(null)
+            }
         }
         viewModel.loading.observe(this) {
             if (it) {

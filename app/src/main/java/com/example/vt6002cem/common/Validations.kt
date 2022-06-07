@@ -65,6 +65,19 @@ object Validations {
         return null;
     }
 
+    fun float(input: Float?):String? {
+        var regexStr = "^(([1-9]*)|(([1-9]*)\\.([0-9]*)))\$"
+        if(input==null){
+            return "Please fill the field"
+        }
+
+        if(!input.toString().matches(regexStr.toRegex())){
+            return "Please input validate number"
+        }
+
+        return null;
+    }
+
 
 
 
