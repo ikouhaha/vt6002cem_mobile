@@ -21,13 +21,21 @@ fun textValidator(view: TextInputLayout, input:String?) {
 
 }
 
-@BindingAdapter("floatValidator")
-fun floatValidator(view: TextInputLayout, input:Float?) {
+//@BindingAdapter("floatValidator")
+//fun floatValidator(view: TextInputLayout, input:Number?) {
+//    if(input!=null){
+//        view.error  = Validations.float(input)
+//    }
+//
+//}
+@BindingAdapter("numberValidator")
+fun numberValidator(view: TextInputLayout, input:Number?) {
     if(input!=null){
-        view.error  = Validations.float(input)
+        view.error  = Validations.number(input)
     }
 
 }
+
 @BindingAdapter("passwordValidator")
 fun passwordValidator(view: TextInputLayout, input:String?) {
     if(input!=null){

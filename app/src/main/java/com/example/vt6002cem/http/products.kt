@@ -27,6 +27,12 @@ interface ProductsApiService {
         @Query("id") id:Array<Int>,
     ): Response<ArrayList<Product>>
 
+    @POST("products")
+    suspend fun create(
+        @Body product:Product,
+    ): Response<Object>
+
+
     companion object {
         var api: ProductsApiService? = null
         fun getInstance(token: String?): ProductsApiService {

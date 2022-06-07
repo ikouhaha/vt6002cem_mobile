@@ -8,6 +8,9 @@
     >
     <data>
         <variable
+            name="product"
+            type="com.example.vt6002cem.model.Product" />
+        <variable
             name="viewModel"
             type="com.example.vt6002cem.ui.post.CreatePostViewModel" />
     </data>
@@ -18,14 +21,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.post.CreatePostFragment"
     >
-
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_horizontal"
+
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -45,6 +48,29 @@
             android:adjustViewBounds="true"
             android:maxHeight="200dp"
             android:src="@mipmap/ic_image_placeholder_foreground" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/captureImageBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/upload"
+                app:icon="@drawable/ic_baseline_camera_alt_24" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/uploadImageBtn"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/upload"
+                app:icon="@drawable/ic_baseline_file_upload_24" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,18 +84,17 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:hint="@string/NameRequired"
-                app:textValidator="@{viewModel.product.name}"
                 app:errorEnabled="true"
                 app:helperTextTextColor="@color/design_default_color_error"
-                app:startIconDrawable="@drawable/ic_baseline_drive_file_rename_outline_24">
+                app:startIconDrawable="@drawable/ic_baseline_drive_file_rename_outline_24"
+                app:textValidator="@{product.name}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:text="@={viewModel.product.name}" />
+                    android:inputType="text"
+                    android:text="@={product.name}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,16 +104,17 @@
                 android:layout_height="wrap_content"
 
                 android:hint="@string/DescriptionRequired"
-                app:textValidator="@{viewModel.product.about}"
                 app:errorEnabled="true"
                 app:helperTextTextColor="@color/design_default_color_error"
-                app:startIconDrawable="@drawable/ic_baseline_description_24">
+                app:startIconDrawable="@drawable/ic_baseline_description_24"
+                app:textValidator="@{product.about}">
 
                 <com.google.android.material.textfield.TextInputEditText
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:text="@={viewModel.product.about}" />
+                    android:text="@={product.about}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,47 +122,43 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/priceEdit"
                 android:hint="@string/priceRequired"
-                app:floatValidator="@{viewModel.product.price}"
                 app:errorEnabled="true"
+                app:numberValidator="@{product.price}"
                 app:helperTextTextColor="@color/design_default_color_error"
                 app:startIconDrawable="@drawable/ic_baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:text="@={viewModel.product.priceString}"
-                     />
+                    android:inputType="number"
+                    android:text="@={product.priceString}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12pt"
-            android:background="@color/white"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:padding="12dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addToShoppingCartBtn"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="386dp"
-                android:layout_height="wrap_content"
-                android:text="@string/create"
-                app:icon="@drawable/ic_baseline_post_add_24" />
-
-        </LinearLayout>
-
-
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/createButton"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

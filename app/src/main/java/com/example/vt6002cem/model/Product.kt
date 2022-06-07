@@ -6,6 +6,7 @@ import androidx.databinding.Bindable
 import com.example.vt6002cem.BR
 
 
+
 class Product : BaseObservable() {
 
     @get:Bindable
@@ -23,10 +24,17 @@ class Product : BaseObservable() {
         }
 
     @get:Bindable
-    var price: Float? = null
+    var price: Number? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.price)
+        }
+
+    @get:Bindable
+    var companyCode: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.companyCode)
         }
 
     @get:Bindable
@@ -40,16 +48,24 @@ class Product : BaseObservable() {
     var imageBase64: String? = null
         set(value) {
             field = value
-            notifyPropertyChanged(BR.imageBase64)
+            //otifyPropertyChanged(BR.imageBase64)
         }
 
     @Bindable
-    fun getPriceString(): String {
+    fun getPriceString(): String? {
+        if(price==null){
+            return null
+        }
         return price.toString()
     }
 
-    fun setPriceString(value: String) {
-        val v = value.toFloat()
-        this.price = v
+    fun setPriceString(value: String?) {
+        if(value.isNullOrEmpty()){
+            this.price = null
+        }else {
+            this.price = value.toBigDecimal()
+        }
+        notifyPropertyChanged(BR.priceString)
+
     }
 }

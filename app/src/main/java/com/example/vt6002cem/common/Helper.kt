@@ -1,20 +1,17 @@
 package com.example.vt6002cem.common
 
 
-import android.app.Activity
 import android.content.Context
-import android.view.View
-import android.view.WindowManager
+import android.graphics.Bitmap
+import android.util.Base64
 import com.example.vt6002cem.Config
-import com.example.vt6002cem.R
 import com.google.android.gms.tasks.Tasks
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Response
-import java.io.IOException
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.TimeUnit
 
 
@@ -77,6 +74,12 @@ object Helper {
             .build()
 
         return httpClient
+    }
+
+    fun convertToBase64(bitmap: Bitmap): String? {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
     }
 
     suspend fun getToken():String {

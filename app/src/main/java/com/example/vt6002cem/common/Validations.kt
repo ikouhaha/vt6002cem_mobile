@@ -78,6 +78,17 @@ object Validations {
         return null;
     }
 
+    fun number(input: Number?):String? {
+        var regexStr = "^(0|[1-9][0-9]*)\$"
+        if(input==null){
+            return "Please fill the field"
+        }
+        if(!input.toString().matches(regexStr.toRegex())){
+            return "Please input validate number"
+        }
+        return null;
+    }
+
 
 
 
