@@ -5,9 +5,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Base64
 import com.example.vt6002cem.Config
+import com.example.vt6002cem.model.EncryptedMessage
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Response
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit
 
 object Helper {
 
+    private const val SHARED_PREFS_FILENAME = "biometric_prefs"
 
     fun ensureNotNull(context: Context?) {
         requireNotNull(context) { "Context is null." }
@@ -43,10 +46,48 @@ object Helper {
             .edit().putString(key, value).apply()
     }
 
+    fun setStoreBoolean(context: Context?,key:String,value:Boolean,prefs: String?="store") {
+        ensureNotNull(context)
+        context!!.getSharedPreferences(prefs, Context.MODE_PRIVATE)
+            .edit().putBoolean(key, value).apply()
+    }
+    fun getStoreBoolean(context: Context?,key:String,prefs: String?="store"):Boolean {
+        ensureNotNull(context)
+        return context!!.getSharedPreferences(prefs, Context.MODE_PRIVATE).getBoolean(key,false)
+    }
+
 
     fun getErrorMsg(response: Response<Object>){
 
 
+    }
+
+    fun storeEncryptedMessage(
+        context: Context,
+        prefKey: String,
+        encryptedMessage: EncryptedMessage
+    ) {
+        val json = Gson().toJson(encryptedMessage)
+        context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(prefKey, json).apply()
+    }
+
+    fun getEncryptedMessage(
+        context: Context,
+        prefKey: String
+    ): EncryptedMessage? {
+        val json = context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
+            .getString(prefKey, null)
+        return Gson().fromJson(json, EncryptedMessage::class.java)
+    }
+
+    fun clearEncryptedMessage(
+        context: Context,
+        prefKey: String
+    ){
+         context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
+             .edit().remove(prefKey).apply()
     }
 
     fun getHttpTokenClient(token:String):OkHttpClient{

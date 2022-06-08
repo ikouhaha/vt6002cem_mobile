@@ -19,6 +19,7 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
     val formErrors = ObservableArrayList<String>()
     val loading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
+    var isSave = MutableLiveData<Boolean>()
     val isSuccessRegister = MutableLiveData<Boolean>()
     private val TAG = "SettingsViewModel"
 
@@ -84,6 +85,7 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
                         onError("Error : ${response.message()} ")
                     }
                 }
+                isSave.postValue(true)
             }
         }
     }
@@ -100,6 +102,8 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
                         onError("Error : ${response.message()} ")
                     }
                 }
+
+                isSave.postValue(true)
             }
         }
     }

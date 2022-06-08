@@ -43,5 +43,6 @@
     <string name="DescriptionRequired">Description*</string>
     <string name="priceRequired">Price*</string>
     <string name="upload">Upload</string>
+    <string name="fingerPrint">FingerPrint</string>
 
 </resources>

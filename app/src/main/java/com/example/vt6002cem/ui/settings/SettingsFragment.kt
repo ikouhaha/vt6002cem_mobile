@@ -110,6 +110,12 @@ class SettingsFragment : Fragment() {
                     it.errorMessage.postValue(null)
                 }
             }
+            it.isSave.observe(this){isSave->
+                if(isSave){
+                    Toast.makeText(activity,"Save Successfully",Toast.LENGTH_SHORT).show()
+                    it.isSave.postValue(false)
+                }
+            }
             it.loading.observe(this){
                 if(it){
                     loading()

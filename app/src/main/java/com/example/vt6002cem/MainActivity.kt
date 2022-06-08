@@ -8,11 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.databinding.ActivityMainBinding
 import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.http.UserApiService
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
-    private lateinit var ref:DatabaseReference
+    private  var ref:DatabaseReference? = null
     private val TAG:String = "Main"
     private lateinit var navController: NavController
     private lateinit var notificationBadge: BadgeDrawable
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         Firebase.auth.currentUser?.let { user->
             ref = database.getReference("${user.uid}/cart")
-            ref.addValueEventListener(_taskListener)
+            ref?.addValueEventListener(_taskListener)
         }
         notificationBadge = navView.getOrCreateBadge(R.id.navigation_notifications)
         notificationBadge.isVisible = false
@@ -96,14 +98,31 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ref.removeEventListener(_taskListener)
+        ref?.removeEventListener(_taskListener)
     }
 
     fun signOut(view: View){
         Firebase.auth.currentUser?.let {
-            ref.removeEventListener(_taskListener)
+            ref?.removeEventListener(_taskListener)
             Firebase.auth.signOut()
             navController.navigate(R.id.navigation_home)
+        }
+    }
+    //  life cycle function , pop up if available
+    override fun onResume() {
+        super.onResume()
+
+        val biometricManager = BiometricManager.from(this)
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->
+                Helper.setStoreBoolean(this,"canFingerPrint",true)
+//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+//                biometricStatusTextView.text = "No biometric features available on this device."
+//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+//                biometricStatusTextView.text = "Biometric features are currently unavailable."
+//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+//                // Prompts the user to create credentials that your app accepts.
+//                biometricStatusTextView.text = "Biometric features are not enrolled."
         }
     }
 

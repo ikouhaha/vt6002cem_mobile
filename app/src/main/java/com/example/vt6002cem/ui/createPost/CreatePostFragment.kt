@@ -142,6 +142,15 @@ class CreatePostFragment : Fragment() {
             it.product.observe(this) {product->
                 binding.product = product
             }
+            it.isSave.observe(this){isSave->
+                if(isSave){
+                    Toast.makeText(activity, "Save successfully", Toast.LENGTH_SHORT).show()
+                    navigation.selectedItemId = R.id.navigation_home
+                    viewModel.product.postValue(Product())
+                    it.isSave.postValue(false)
+//                        requireActivity().viewModelStore.clear();
+                }
+            }
         }
 
 

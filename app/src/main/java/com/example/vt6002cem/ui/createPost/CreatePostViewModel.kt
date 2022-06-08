@@ -15,6 +15,7 @@ class CreatePostViewModel (private val repository: ProductRepository) : ViewMode
     val product = MutableLiveData<Product>(Product())
     var job: Job? = null
     val formErrors = ObservableArrayList<String>()
+    val isSave = MutableLiveData<Boolean>()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")
@@ -47,6 +48,7 @@ class CreatePostViewModel (private val repository: ProductRepository) : ViewMode
                 if (response.isSuccessful) {
                     response.body()?.let {
                         //product.postValue(it)
+                        isSave.postValue(true)
                     }
                     loading.postValue(false)
                 } else {
