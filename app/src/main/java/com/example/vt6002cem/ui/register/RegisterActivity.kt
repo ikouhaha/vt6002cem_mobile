@@ -104,7 +104,7 @@ class RegisterActivity : AppCompatActivity() {
                                     user.email = firebaseUser.email
                                     user.password = (111111111..9999999999).random().toString()
                                     user.displayName = firebaseUser.displayName
-                                    user.avatarUrl = firebaseUser.photoUrl.toString()
+                                    user.avatarUrl = firebaseUser.photoUrl?.toString()
                                     user.fid = firebaseUser.uid
                                     user.role = "user" //default
                                     viewModel.googleSiupUp(user)

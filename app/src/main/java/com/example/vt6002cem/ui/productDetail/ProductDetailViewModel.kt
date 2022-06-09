@@ -2,14 +2,19 @@ package com.example.vt6002cem.ui.productDetail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.vt6002cem.model.Comment
 import com.example.vt6002cem.model.Product
+import com.example.vt6002cem.model.User
 import com.example.vt6002cem.repositroy.ProductRepository
+import com.example.vt6002cem.repositroy.UserRepository
 import kotlinx.coroutines.*
 
-class ProductDetailViewModel (private val repository: ProductRepository) : ViewModel() {
+class ProductDetailViewModel (private val repository: ProductRepository,private val userRepository: UserRepository) : ViewModel() {
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val product = MutableLiveData<Product>()
+    val comment = MutableLiveData<Comment>(Comment())
+    var commentList= MutableLiveData<ArrayList<Comment>>()
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")

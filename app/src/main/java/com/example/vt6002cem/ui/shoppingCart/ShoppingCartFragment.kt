@@ -15,6 +15,7 @@ import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
+import com.example.vt6002cem.model.Comment
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,6 +36,7 @@ class ShoppingCartFragment : Fragment() {
     private lateinit var viewModel: ShoppingCartViewModel
     private lateinit var adapter: ShoppingCartAdapter
     private var ref: DatabaseReference? = null
+
     private var TAG = "ShoppingCart"
 
     var _taskListener: ValueEventListener = object : ValueEventListener {
@@ -64,6 +66,7 @@ class ShoppingCartFragment : Fragment() {
         }
 
     }
+
 
     fun loading() {
         binding.indicator.show()
@@ -114,11 +117,12 @@ class ShoppingCartFragment : Fragment() {
             val retrofitService = ProductsApiService.getInstance(it.result.token)
             val repository = Factory(ProductRepository(retrofitService))
             binding.cartList.adapter = adapter
-            viewModel = ViewModelProvider(this, repository).get(ShoppingCartViewModel::class.java)
+            viewModel = ViewModelProvider(this, repository)[ShoppingCartViewModel::class.java]
             initObserve()
 
             ref = database.getReference("${Firebase.auth.currentUser!!.uid}/cart")
             ref?.addValueEventListener(_taskListener)
+
 
         }
 
@@ -130,7 +134,7 @@ class ShoppingCartFragment : Fragment() {
 
     }
 
-    fun initObserve() {
+    private fun initObserve() {
 
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
@@ -157,10 +161,7 @@ class ShoppingCartFragment : Fragment() {
                 done()
             }
         }
-
-
         adapter.onDeleteShoppingCartClick = { product ->
-
             ref?.let { r ->
                 r.get().addOnCompleteListener { g ->
                     for (sc in g.result.children) {

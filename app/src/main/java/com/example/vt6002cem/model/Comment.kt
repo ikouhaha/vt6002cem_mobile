@@ -11,18 +11,19 @@ import java.util.*
 class Comment : BaseObservable() {
 
     @get:Bindable
-    var id: Int? = null
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.id)
-        }
-
-    @get:Bindable
-    var productId: String? = null
+    var productId: Int? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.productId)
         }
+
+    @get:Bindable
+    var avatar: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.avatar)
+        }
+
 
     @get:Bindable
     var comment: String? = null
@@ -32,17 +33,23 @@ class Comment : BaseObservable() {
         }
 
     @get:Bindable
-    var commentDate: Date? = null
+    var commentDate: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.commentDate)
         }
 
+
     @get:Bindable
-    var commentBy: User? = null
+    var commentBy: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.commentBy)
         }
-
+    @get:Bindable
+    var commentById: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.commentById)
+        }
 }

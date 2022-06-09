@@ -19,17 +19,18 @@
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.295" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/drawable/stroke_color.xml" value="0.248" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_login.xml" value="0.1" />
-        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_main.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_product_detail.xml" value="0.17135416666666667" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/activity_register.xml" value="0.21041666666666667" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_create_post.xml" value="0.302536231884058" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_dashboard.xml" value="0.146875" />
-        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home.xml" value="0.41286307053941906" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home_card.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_home_list.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_notification_card.xml" value="0.24230072463768115" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_product_comment_card.xml" value="0.17239583333333333" />
-        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_product_detail.xml" value="0.2763929618768328" />
+        <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_product_detail.xml" value="0.1" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_settings.xml" value="0.22" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_shopping_cart.xml" value="0.3046875" />
         <entry key="..\:/Users/ikouh/Documents/vt6002cem_mobile/app/src/main/res/layout/fragment_shopping_cart_card.xml" value="0.3046875" />

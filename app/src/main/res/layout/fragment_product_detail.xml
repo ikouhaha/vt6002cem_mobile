@@ -8,16 +8,18 @@
     >
     <data>
         <variable
+            name="product"
+            type="com.example.vt6002cem.model.Product" />
+        <variable
+            name="comment"
+            type="com.example.vt6002cem.model.Comment" />
+        <variable
             name="viewModel"
             type="com.example.vt6002cem.ui.productDetail.ProductDetailViewModel" />
     </data>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment"
-    >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="@{viewModel.product.name}"
+                android:text="@{product.name}"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@color/black"
                 android:textSize="32sp"
@@ -80,7 +82,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{'$'+viewModel.product.price.toString()}"
+                android:text="@{'$'+product.price.toString()}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp"
@@ -91,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="@{viewModel.product.about}"
+                android:text="@{product.about}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:paddingTop="5dp"
@@ -160,7 +162,7 @@
                         android:src="@drawable/ic_baseline_comment_24" />
 
                     <EditText
-                        android:id="@+id/et_search"
+                        android:id="@+id/etComment"
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
                         android:layout_centerVertical="true"
@@ -172,7 +174,7 @@
                         android:inputType="text"
                         android:textColor="@color/black"
                         android:textCursorDrawable="@drawable/custom_cursor"
-
+                        android:text="@={comment.comment}"
                         />
 
                     <ImageView
@@ -191,6 +193,7 @@
                 android:id="@+id/commentList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/fragment_product_comment_card" />
 
 
@@ -199,6 +202,5 @@
 
     </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

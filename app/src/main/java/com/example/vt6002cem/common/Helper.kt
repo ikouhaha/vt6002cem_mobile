@@ -4,6 +4,7 @@ package com.example.vt6002cem.common
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Base64
+import androidx.lifecycle.ViewModel
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.model.EncryptedMessage
 import com.google.android.gms.tasks.Tasks
@@ -14,6 +15,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -56,7 +59,6 @@ object Helper {
         return context!!.getSharedPreferences(prefs, Context.MODE_PRIVATE).getBoolean(key,false)
     }
 
-
     fun getErrorMsg(response: Response<Object>){
 
 
@@ -80,6 +82,15 @@ object Helper {
         val json = context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
             .getString(prefKey, null)
         return Gson().fromJson(json, EncryptedMessage::class.java)
+    }
+
+    fun Date.toDateString(format: String="yyyy/MM/dd HH:mm:ss", locale: Locale = Locale.getDefault()): String {
+        val formatter = SimpleDateFormat(format, locale)
+        return formatter.format(this)
+    }
+
+    fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
     }
 
     fun clearEncryptedMessage(

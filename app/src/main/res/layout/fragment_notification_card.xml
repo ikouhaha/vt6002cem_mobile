@@ -3,12 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/comment_card"
-    tools:context=".ui.home.HomeFragment"
-
+    tools:context=".ui.notifications.NotificationsFragment"
     >
 
     <data>
-
         <variable
             name="comment"
             type="com.example.vt6002cem.model.Comment" />
