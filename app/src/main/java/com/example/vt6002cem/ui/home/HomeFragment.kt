@@ -163,7 +163,7 @@ class HomeFragment : Fragment() {
             Log.d(TAG, product.id.toString())
             Firebase.auth.currentUser?.let {user->
 
-                database.getReference("${user.uid}/cart/${product.id}").setValue(true)
+                database.getReference("/cart/${user.uid}/${product.id}").setValue(true)
             }
         }
 

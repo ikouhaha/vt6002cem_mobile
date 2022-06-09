@@ -133,7 +133,6 @@ class SettingsFragment : Fragment() {
                     binding!!.radioGroup.check(R.id.user)
                 }else if(it.role=="staff"){
                     binding!!.radioGroup.check(R.id.staff)
-
                 }
             }
         }

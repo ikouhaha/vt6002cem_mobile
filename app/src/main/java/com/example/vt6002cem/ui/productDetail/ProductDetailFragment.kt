@@ -259,7 +259,7 @@ class ProductDetailFragment : Fragment() {
         binding.addToShoppingCartBtn.setOnClickListener{
             Firebase.auth.currentUser?.let {user->
 
-                database.getReference("${user.uid}/cart/${id}").setValue(true)
+                database.getReference("/cart/${user.uid}/${id}").setValue(true)
             }
         }
 

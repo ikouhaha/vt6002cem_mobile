@@ -120,7 +120,20 @@ class ShoppingCartFragment : Fragment() {
             viewModel = ViewModelProvider(this, repository)[ShoppingCartViewModel::class.java]
             initObserve()
 
-            ref = database.getReference("${Firebase.auth.currentUser!!.uid}/cart")
+            ref = database.getReference("/cart/${Firebase.auth.currentUser!!.uid}")
+            ref?.get()?.addOnCompleteListener {
+                val arr = ArrayList<Int>()
+                for (sc in it.result.children) {
+                    Log.d(TAG, "Value is: $sc")
+                    sc.key?.let {key->
+                        arr.add(key.toInt())
+                    }
+                }
+                viewModel.apply {
+                    ids.postValue(arr.toTypedArray())
+                    getProducts()
+                }
+            }
             ref?.addValueEventListener(_taskListener)
 
 
@@ -138,16 +151,16 @@ class ShoppingCartFragment : Fragment() {
 
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
-            viewModel.ids.value?.let {array->
-                for(id in array){
-                    val find = it.find { product->product.id==id}
-                    if(find==null){
-                        database.getReference("${Firebase.auth.currentUser!!.uid}/cart/${id}").removeValue()
-                    }
-                }
-            }
 
         }
+
+        viewModel.deleteIds.observe(this){array->
+            for(id in array){
+                database.getReference("/cart/${Firebase.auth.currentUser!!.uid}/${id}").removeValue()
+            }
+            viewModel.deleteIds.postValue(arrayListOf())
+        }
+
         viewModel.errorMessage.observe(this) {msg->
             if(!msg.isNullOrEmpty()){
                 Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()

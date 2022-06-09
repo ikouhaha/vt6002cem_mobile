@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -38,11 +39,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
     private var ref: DatabaseReference? = null
+    private var notificationRef: DatabaseReference? = null
     private val TAG: String = "Main"
     private lateinit var navController: NavController
     private lateinit var notificationBadge: BadgeDrawable
     private lateinit var cartBadge: BadgeDrawable
-
+    private var user = MutableLiveData<User>()
 
     var _taskListener: ValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
@@ -71,24 +73,61 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    var _notifyListener: ValueEventListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            // This method is called once with the initial value and again
+            // whenever data at this location is updated.
+            var count = 0
+            for (sc in snapshot.children) {
+                Log.d(TAG, "Value is: $sc")
+                count++
+            }
+            if (count > 0) {
+                notificationBadge.isVisible = true
+                notificationBadge.number = count
+            } else {
+                notificationBadge.isVisible = false
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Toast.makeText(
+                this@MainActivity,
+                "Failed to read value." + error.toException(),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         if (Firebase.auth.currentUser == null) {
             init()
         } else {
             Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
-                var repository = UserRepository(UserApiService.getInstance(it.result.token))
+                val repository = UserRepository(UserApiService.getInstance(it.result.token))
                 lifecycleScope.launch {
-                    var response = repository.getProfile()
-
+                    val response = repository.getProfile()
                     if (response.isSuccessful) {
-                        response.body()?.let {
+                        response.body()?.let {u->
+                            user.postValue(u)
+                            if(u.role=="staff"){
+                                notificationRef = database.getReference("/notifications/${u.companyCode}")
+                            }else{
+                                notificationRef = database.getReference("/notifications/${Firebase.auth.currentUser!!.uid}")
+                            }
+
+                            ref = database.getReference("/cart/${Firebase.auth.currentUser!!.uid}")
+                            ref?.addValueEventListener(_taskListener)
+                            notificationRef?.addValueEventListener(_notifyListener)
+
+
                             Helper.setStoreString(this@MainActivity, "profile", Gson().toJson(it))
                             init()
                         }
-
                     } else {
                         Toast.makeText(
                             this@MainActivity,
@@ -97,8 +136,6 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-
-
             }
         }
 
@@ -138,10 +175,7 @@ class MainActivity : AppCompatActivity() {
         cartBadge = navView.getOrCreateBadge(R.id.navigation_shopping_cart)
         cartBadge.isVisible = false
 
-        Firebase.auth.currentUser?.let {
-            ref = database.getReference("${Firebase.auth.currentUser!!.uid}/cart")
-            ref?.addValueEventListener(_taskListener)
-        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -157,6 +191,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         ref?.removeEventListener(_taskListener)
+        notificationRef?.removeEventListener(_notifyListener)
     }
 
     fun signOut(view: View) {
