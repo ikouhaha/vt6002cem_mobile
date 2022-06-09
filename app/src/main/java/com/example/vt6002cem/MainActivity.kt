@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                             notificationRef?.addValueEventListener(_notifyListener)
 
 
-                            Helper.setStoreString(this@MainActivity, "profile", Gson().toJson(it))
+                            Helper.setStoreString(this@MainActivity, "profile", Gson().toJson(u))
                             init()
                         }
                     } else {

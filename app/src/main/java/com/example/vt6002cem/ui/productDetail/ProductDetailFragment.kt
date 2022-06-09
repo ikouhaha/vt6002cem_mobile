@@ -212,7 +212,9 @@ class ProductDetailFragment : Fragment() {
 
                             //send notification send to company staff
                             if(profile?.role=="user"){
-                                notificationRef?.child("/${viewModel.product.value?.companyCode}")?.push()?.setValue(comment)
+                              var newEntry =  notificationRef?.child("/${viewModel.product.value?.companyCode}")?.push()
+                                comment.key = newEntry?.key
+                                newEntry?.setValue(comment)
                             }else{
                                 //staff send notification send to other user
                                 val userIds = ArrayList<String?>()
@@ -238,17 +240,22 @@ class ProductDetailFragment : Fragment() {
                                                 }
                                             }
                                         }
+                                    }
 
+                                    for(id in userIds){
+                                        var newEntry = notificationRef?.child("/${id}")?.push()
+                                        comment.key = newEntry?.key
+                                        newEntry?.setValue(comment)
                                     }
                                 }
-                                for(id in userIds){
-                                    notificationRef?.child("/${id}")?.push()?.setValue(comment)
-                                }
+
                             }
                         }
                     }
+                    viewModel.comment.postValue(Comment())
                     cancelFocus(binding.etComment)
                     handled = true
+
                 }
 
 

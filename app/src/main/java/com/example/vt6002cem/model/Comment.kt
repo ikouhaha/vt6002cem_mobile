@@ -11,6 +11,13 @@ import java.util.*
 class Comment : BaseObservable() {
 
     @get:Bindable
+    var key: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.key)
+        }
+
+    @get:Bindable
     var productId: Int? = null
         set(value) {
             field = value

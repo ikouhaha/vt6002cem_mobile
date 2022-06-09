@@ -137,6 +137,9 @@ class ShoppingCartFragment : Fragment() {
             ref?.addValueEventListener(_taskListener)
 
 
+
+
+
         }
 
     }
@@ -148,7 +151,6 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private fun initObserve() {
-
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
 

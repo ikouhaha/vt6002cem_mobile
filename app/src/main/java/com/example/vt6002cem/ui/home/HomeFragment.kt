@@ -150,8 +150,6 @@ class HomeFragment : Fragment() {
             }
         })
         adapter.onItemClick = {
-
-            // do something with your item
             val bundle = Bundle()
             bundle.putInt("id", it.id!!)
             bundle.putString("action", "view")
