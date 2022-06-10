@@ -56,15 +56,14 @@
 
                     />
 
-                <ImageView
-                    android:id="@+id/iv_clear"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/iv_gps_search"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_baseline_close_24"
-                    android:visibility="gone"
-                    />
+                    app:icon="@drawable/ic_baseline_gps_fixed_24" />
             </RelativeLayout>
         </LinearLayout>
 

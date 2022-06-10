@@ -4,9 +4,11 @@ import android.Manifest
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -33,10 +36,7 @@ import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
@@ -53,28 +53,81 @@ class HomeFragment : Fragment() {
     private var TAG = "Home"
     private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
 
-    protected var mLatitudeText: TextView? = null
-    protected var mLongitudeText: TextView? = null
-    protected var mTimeText: TextView? = null
-    protected var mOutput: TextView? = null
-    protected var mLocateButton: Button? = null
+    protected var mLatitudeText: String = ""
+    protected var mLongitudeText: String = ""
+    protected var mTimeText: String = ""
+    protected var mOutput: String = ""
 
     // member variables that hold location info
     protected var mLastLocation: Location? = null
     protected var mLocationRequest: LocationRequest? = null
     protected var mGeocoder: Geocoder? = null
     protected var mLocationProvider: FusedLocationProviderClient? = null
+    protected  var thoroughfare:String = ""
 
     var mLocationCallBack: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
+
             mLastLocation = result.lastLocation
-            mLatitudeText!!.text = mLastLocation!!.latitude.toString()
-            mLongitudeText!!.text = mLastLocation!!.longitude.toString()
-            mTimeText!!.text = DateFormat.getTimeInstance().format(Date())
+            mLatitudeText = mLastLocation!!.latitude.toString()
+            mLongitudeText = mLastLocation!!.longitude.toString()
+            mTimeText = DateFormat.getTimeInstance().format(Date())
+
+            mGeocoder = Geocoder(requireActivity())
+            try {
+                // Only 1 address is needed here.
+                val addresses = mGeocoder!!.getFromLocation(
+                    mLastLocation!!.latitude, mLastLocation!!.longitude, 1
+                )
+                if (addresses.size == 1) {
+                    val address = addresses[0]
+                    val addressLines = StringBuilder()
+                    if (address.maxAddressLineIndex > 0) {
+                        for (i in 0 until address.maxAddressLineIndex) {
+                            addressLines.append(
+                                """
+${address.getAddressLine(i)}
+
+""".trimIndent()
+                            )
+                        }
+                    } else {
+                        addressLines.append(address.getAddressLine(0))
+                    }
+                    thoroughfare = address.thoroughfare
+                    mOutput = addressLines.toString()
+                    showGpsDialog(thoroughfare)
+
+                } else {
+                    mOutput = "WARNING! Geocoder returned more than 1 addresses!"
+                }
+            } catch (e: Exception) {
+            }
+        }
+
+
+    }
+
+    private fun showGpsDialog(area:String) {
+        context?.let {
+            AlertDialog.Builder(it) // set message, title, and icon
+                .setTitle("Find")
+                .setMessage("Do you want to find nearby ${area}")
+                .setPositiveButton("Yes",
+                    DialogInterface.OnClickListener { dialog, whichButton -> //your deleting code
+                        viewModel?.clearList()
+                        viewModel?.getProducts()
+                        dialog.dismiss()
+                    })
+                .setNegativeButton("No",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                .create()?.show()
+            mLocationProvider?.removeLocationUpdates(mLocationCallBack)
+            binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
         }
     }
 
-    private fun AskOption(product:Product): AlertDialog? {
+    private fun AskDeleteOption(product:Product): AlertDialog? {
         return context?.let {
             AlertDialog.Builder(it) // set message, title, and icon
                 .setTitle("Delete")
@@ -90,6 +143,7 @@ class HomeFragment : Fragment() {
                 .create()
         }
     }
+
 
     fun loading(){
         binding.indicator.show()
@@ -107,9 +161,80 @@ class HomeFragment : Fragment() {
 
     }
 
+
+
+    fun onLocateStartClicked() {
+        binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_fixed_24)
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = 1
+        mLocationRequest!!.fastestInterval = 1
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationProvider = LocationServices.getFusedLocationProviderClient(requireActivity())
+        mTimeText = "Started updating location"
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        mLocationProvider!!.requestLocationUpdates(
+            mLocationRequest!!,
+            mLocationCallBack, Looper.getMainLooper()
+        )
+
+    }
+
+    fun onLocateClicked(view: View) {
+        // LocationReques sets how often etc the app receives location updates
+
+        mGeocoder = Geocoder(requireActivity())
+        try {
+            // Only 1 address is needed here.
+            val addresses = mGeocoder!!.getFromLocation(
+                mLastLocation!!.latitude, mLastLocation!!.longitude, 1
+            )
+            if (addresses.size == 1) {
+                val address = addresses[0]
+                val addressLines = StringBuilder()
+                //see herehttps://stackoverflow
+                // .com/questions/44983507/android-getmaxaddresslineindex-returns-0-for-line-1
+                if (address.maxAddressLineIndex > 0) {
+                    for (i in 0 until address.maxAddressLineIndex) {
+                        addressLines.append(
+                            """
+${address.getAddressLine(i)}
+""".trimIndent()
+                        )
+                    }
+                } else {
+                    addressLines.append(address.getAddressLine(0))
+                }
+                mOutput = addressLines.toString()
+            } else {
+                mOutput = "WARNING! Geocoder returned more than 1 addresses!"
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter = HomeProductAdapter(context)
+
+
+
     }
 
     override fun onCreateView(
@@ -118,32 +243,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
         navController = findNavController(this)
 
-        val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            ActivityResultCallback<Map<String?, Boolean?>> { result: Map<String?, Boolean?> ->
-                val fineLocationGranted = result.getOrDefault(
-                    Manifest.permission.ACCESS_FINE_LOCATION, false
-                )
-                val coarseLocationGranted = result.getOrDefault(
-                    Manifest.permission.ACCESS_COARSE_LOCATION, false
-                )
-                if (fineLocationGranted != null && fineLocationGranted) {
-                    // Precise location access granted.
-                    // permissionOk = true;
-                    mTimeText!!.text = "permission granted"
-                } else if (coarseLocationGranted != null && coarseLocationGranted) {
-                    // Only approximate location access granted.
-                    // permissionOk = true;
-                    mTimeText!!.text = "permission granted"
-                } else {
-                    // permissionOk = false;
-                    // No location access granted.
-                    mTimeText!!.text = "permission not granted"
-                }
-            }
-        )
 
         val root: View = binding.root
         return root
@@ -177,6 +279,9 @@ class HomeFragment : Fragment() {
     }
     fun initObserve(){
         // add observer
+        binding!!.ivGpsSearch.setOnClickListener{
+            onLocateStartClicked()
+        }
         viewModel?.let {
             it.productList.observe(this) {list->
                 adapter.setProductList(list)
@@ -203,18 +308,7 @@ class HomeFragment : Fragment() {
 //                }
 //            }
         }
-
-        binding.ivClear.setOnClickListener {
-            binding.etSearch.text = null
-        }
-        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.ivClear.visibility = View.VISIBLE
-            } else {
-                binding.ivClear.visibility = View.GONE
-                cancelFocus(binding.etSearch)
-            }
-        }
+        
         binding.etSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -264,7 +358,7 @@ class HomeFragment : Fragment() {
         }
         adapter.onDeleteButtonClick = { product ->
             Log.d(TAG, product.id.toString())
-            val diaBox = AskOption(product)
+            val diaBox = AskDeleteOption(product)
             diaBox?.show()
 
         }

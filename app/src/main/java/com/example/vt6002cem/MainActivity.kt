@@ -1,12 +1,15 @@
 package com.example.vt6002cem
 
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +26,7 @@ import com.example.vt6002cem.http.UserApiService
 import com.example.vt6002cem.model.User
 import com.example.vt6002cem.repositroy.UserRepository
 import com.example.vt6002cem.ui.register.RegisterActivity
+import com.google.android.gms.location.LocationRequest
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ktx.auth
@@ -106,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        gpsInit()
         if (Firebase.auth.currentUser == null) {
             init()
             navView?.menu?.findItem(R.id.navigation_create_post)?.isVisible = false
@@ -149,6 +154,32 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    fun gpsInit(){
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+            ActivityResultCallback<Map<String?, Boolean?>> { result: Map<String?, Boolean?> ->
+                val fineLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_FINE_LOCATION, false
+                )
+                val coarseLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_COARSE_LOCATION, false
+                )
+
+            }
+        )
+
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+
+
+
+    }
+
 
     fun init() {
 
