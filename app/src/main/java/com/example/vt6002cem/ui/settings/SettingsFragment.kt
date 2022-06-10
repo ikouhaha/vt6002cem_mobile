@@ -34,9 +34,10 @@ class SettingsFragment : Fragment() {
     private var binding: FragmentSettingsBinding? = null
     private var _token = ""
     private lateinit var auth: FirebaseAuth
-    private lateinit var navigation:BottomNavigationView
-    private  var viewModel: SettingsViewModel? = null
+    private lateinit var navigation: BottomNavigationView
+    private var viewModel: SettingsViewModel? = null
     private val TAG = "SettingsFragment"
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     override fun onDestroyView() {
@@ -44,14 +45,15 @@ class SettingsFragment : Fragment() {
         viewModel = null
     }
 
-    fun loading(){
+    fun loading() {
         binding?.indicator?.show()
         activity?.window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
     }
 
-    fun done(){
+    fun done() {
         binding?.indicator?.hide()
         activity?.window?.clearFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -60,11 +62,10 @@ class SettingsFragment : Fragment() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        var user  = auth.currentUser
+        var user = auth.currentUser
         if (user == null) {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
@@ -86,69 +87,77 @@ class SettingsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        if(Firebase.auth.currentUser==null){
+        if (Firebase.auth.currentUser == null) {
             init(null)
-        }else{
+        } else {
             Firebase.auth.currentUser?.getIdToken(false)?.addOnCompleteListener { it ->
 
-                Log.d(TAG,it.result.token.toString())
+                Log.d(TAG, it.result.token.toString())
                 init(it.result.token)
             }
         }
     }
 
-    fun init(token:String?){
+    fun init(token: String?) {
         val retrofitService = UserApiService.getInstance(token)
         val repository = Factory(UserRepository(retrofitService))
-        viewModel = ViewModelProvider(this,repository)[SettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this, repository)[SettingsViewModel::class.java]
         binding!!.viewModel = viewModel
         initObserve()
-        var profile = Gson().fromJson(Helper.getStoreString(context,"profile"), User::class.java)
+        var profile = Gson().fromJson(Helper.getStoreString(context, "profile"), User::class.java)
         viewModel?.user?.postValue(profile)
 
 
     }
+
     fun initObserve() {
-        viewModel?.let {
-            it.errorMessage.observe(this){msg->
-                if(!msg.isNullOrEmpty()){
-                    Toast.makeText(activity,msg,Toast.LENGTH_SHORT).show()
+        viewModel?.let { it ->
+            it.errorMessage.observe(this) { msg ->
+                if (!msg.isNullOrEmpty()) {
+                    Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
                     it.errorMessage.postValue(null)
                 }
             }
-            it.isSave.observe(this){isSave->
-                if(isSave){
-                    Toast.makeText(activity,"Save Successfully",Toast.LENGTH_SHORT).show()
+            it.isSave.observe(this) { isSave ->
+                if (isSave) {
+                    Toast.makeText(activity, "Save Successfully", Toast.LENGTH_SHORT).show()
                     it.isSave.postValue(false)
                 }
             }
-            it.loading.observe(this){
-                if(it){
+            it.loading.observe(this) {
+                if (it) {
                     loading()
-                }else{
+                } else {
                     done()
                 }
             }
-            it.user.observe(this){
+            it.user.observe(this) { user ->
                 binding!!.viewModel = viewModel
-                Glide.with(this)
-                    .load(it.avatarUrl)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .placeholder(R.mipmap.ic_image_placeholder_foreground)
-                    .into(binding!!.avatarImg)
-                if(it.role=="user"){
-                    binding!!.radioGroup.check(R.id.user)
-                }else if(it.role=="staff"){
-                    binding!!.radioGroup.check(R.id.staff)
+
+                user?.avatarUrl?.let {avatarUrl->
+                    Glide.with(this)
+                        .load(avatarUrl)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .placeholder(R.mipmap.ic_image_placeholder_foreground)
+                        .into(binding!!.avatarImg)
                 }
+                if(user?.role!=null){
+                    if (user.role == "user") {
+                        binding!!.radioGroup.check(R.id.user)
+                    } else if (user.role == "staff") {
+                        binding!!.radioGroup.check(R.id.staff)
+                    }
+                }
+
             }
         }
 
     }
 
 
-    inner class Factory constructor(private val repository: UserRepository): ViewModelProvider.Factory {
+    inner class Factory constructor(private val repository: UserRepository) :
+        ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {

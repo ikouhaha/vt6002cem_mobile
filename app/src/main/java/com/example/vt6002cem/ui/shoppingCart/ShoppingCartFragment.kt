@@ -195,8 +195,7 @@ class ShoppingCartFragment : Fragment() {
             }
         }
         binding.checkOutBtn.setOnClickListener {
-            //ref?.removeValue()
-
+            ref?.removeValue()
             val intent = Intent(activity, PaymentActivity::class.java)
             intent.putExtra("amt",adapter.getAmt().toFloat())
             startActivity(intent)

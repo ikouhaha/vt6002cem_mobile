@@ -1,8 +1,11 @@
 package com.example.vt6002cem.ui.home
 
+import android.Manifest
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,8 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -26,9 +33,15 @@ import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import java.text.DateFormat
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -39,6 +52,27 @@ class HomeFragment : Fragment() {
     private  lateinit var  navController: NavController
     private var TAG = "Home"
     private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
+
+    protected var mLatitudeText: TextView? = null
+    protected var mLongitudeText: TextView? = null
+    protected var mTimeText: TextView? = null
+    protected var mOutput: TextView? = null
+    protected var mLocateButton: Button? = null
+
+    // member variables that hold location info
+    protected var mLastLocation: Location? = null
+    protected var mLocationRequest: LocationRequest? = null
+    protected var mGeocoder: Geocoder? = null
+    protected var mLocationProvider: FusedLocationProviderClient? = null
+
+    var mLocationCallBack: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            mLastLocation = result.lastLocation
+            mLatitudeText!!.text = mLastLocation!!.latitude.toString()
+            mLongitudeText!!.text = mLastLocation!!.longitude.toString()
+            mTimeText!!.text = DateFormat.getTimeInstance().format(Date())
+        }
+    }
 
     private fun AskOption(product:Product): AlertDialog? {
         return context?.let {
@@ -85,6 +119,31 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         navController = findNavController(this)
+
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+            ActivityResultCallback<Map<String?, Boolean?>> { result: Map<String?, Boolean?> ->
+                val fineLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_FINE_LOCATION, false
+                )
+                val coarseLocationGranted = result.getOrDefault(
+                    Manifest.permission.ACCESS_COARSE_LOCATION, false
+                )
+                if (fineLocationGranted != null && fineLocationGranted) {
+                    // Precise location access granted.
+                    // permissionOk = true;
+                    mTimeText!!.text = "permission granted"
+                } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                    // Only approximate location access granted.
+                    // permissionOk = true;
+                    mTimeText!!.text = "permission granted"
+                } else {
+                    // permissionOk = false;
+                    // No location access granted.
+                    mTimeText!!.text = "permission not granted"
+                }
+            }
+        )
 
         val root: View = binding.root
         return root
