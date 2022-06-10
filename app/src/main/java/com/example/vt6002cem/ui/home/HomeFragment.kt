@@ -1,6 +1,7 @@
 package com.example.vt6002cem.ui.home
 
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,8 +21,9 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
-import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
+import com.example.vt6002cem.http.ProductsApiService
+import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.firebase.auth.ktx.auth
@@ -37,6 +40,22 @@ class HomeFragment : Fragment() {
     private var TAG = "Home"
     private val database = FirebaseDatabase.getInstance(Config.firebaseRDBUrl)
 
+    private fun AskOption(product:Product): AlertDialog? {
+        return context?.let {
+            AlertDialog.Builder(it) // set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Do you want to Delete")
+                .setIcon(R.drawable.ic_baseline_delete_24)
+                .setPositiveButton("Delete",
+                    DialogInterface.OnClickListener { dialog, whichButton -> //your deleting code
+                        viewModel?.deletePost(product.id!!,product.companyCode!!)
+                        dialog.dismiss()
+                    })
+                .setNegativeButton("cancel",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                .create()
+        }
+    }
 
     fun loading(){
         binding.indicator.show()
@@ -100,8 +119,8 @@ class HomeFragment : Fragment() {
     fun initObserve(){
         // add observer
         viewModel?.let {
-            it.productList.observe(this) {
-                adapter.setProductList(it)
+            it.productList.observe(this) {list->
+                adapter.setProductList(list)
             }
             it.errorMessage.observe(this){msg->
                 if(!msg.isNullOrEmpty()){
@@ -110,13 +129,20 @@ class HomeFragment : Fragment() {
                 }
 
             }
-            it.loading.observe(this){
-                if(it){
+            it.loading.observe(this){loading->
+                if(loading){
                     loading()
                 }else{
                     done()
                 }
             }
+//            it.isDelete.observe(this){isDelete->
+//                if(isDelete){
+//                    viewModel?.clearList()
+//                    viewModel?.getProducts()
+//                    it.isDelete.postValue(false)
+//                }
+//            }
         }
 
         binding.ivClear.setOnClickListener {
@@ -156,8 +182,7 @@ class HomeFragment : Fragment() {
         adapter.onItemClick = {
             val bundle = Bundle()
             bundle.putInt("id", it.id!!)
-            bundle.putString("action", "view")
-            navController.navigate(R.id.navigation_product_detail,bundle)
+            navController.navigate(R.id.action_navigation_home_to_navigation_product_detail,bundle)
 
         }
 
@@ -170,6 +195,19 @@ class HomeFragment : Fragment() {
             Firebase.auth.currentUser?.let {user->
                 database.getReference("/cart/${user.uid}/${product.id}").setValue(true)
             }
+        }
+        adapter.onEditButtonClick = { product ->
+            val bundle = Bundle()
+            Log.d(TAG, product.id.toString())
+            bundle.putInt("id", product.id!!)
+            navController.navigate(R.id.action_navigation_home_to_navigation_edit_post,bundle)
+
+        }
+        adapter.onDeleteButtonClick = { product ->
+            Log.d(TAG, product.id.toString())
+            val diaBox = AskOption(product)
+            diaBox?.show()
+
         }
 
     }

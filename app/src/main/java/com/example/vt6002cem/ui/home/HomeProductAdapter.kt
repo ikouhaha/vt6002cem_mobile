@@ -19,6 +19,8 @@ class HomeProductAdapter (private val context: Context?) : RecyclerView.Adapter<
 
     var onItemClick: ((Product) -> Unit)? = null
     var onShoppingCartClick: ((Product) -> Unit)? = null
+    var onEditButtonClick: ((Product) -> Unit)? = null
+    var onDeleteButtonClick: ((Product) -> Unit)? = null
     var list = mutableListOf<Product>()
 
     fun setProductList(products: List<Product>) {
@@ -39,11 +41,13 @@ class HomeProductAdapter (private val context: Context?) : RecyclerView.Adapter<
         holder.binding.product = product
         holder.binding.position = position
 
+
         val url: String = Config.imageUrl+product.id
 
         context?.let {
             Glide.with(it)
                 .load(url)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.mipmap.ic_image_placeholder_foreground)
                 .into(holder.binding.productImage)
@@ -63,6 +67,12 @@ class HomeProductAdapter (private val context: Context?) : RecyclerView.Adapter<
             }
             binding.addToShoppingCartBtn.setOnClickListener{
                 onShoppingCartClick?.invoke(list[adapterPosition])
+            }
+            binding.editButton.setOnClickListener{
+                onEditButtonClick?.invoke(list[adapterPosition])
+            }
+            binding.deleteButton.setOnClickListener{
+                onDeleteButtonClick?.invoke(list[adapterPosition])
             }
         }
     }

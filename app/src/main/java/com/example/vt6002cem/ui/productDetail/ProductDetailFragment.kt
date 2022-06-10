@@ -164,6 +164,7 @@ class ProductDetailFragment : Fragment() {
         binding.let {
             Glide.with(this)
                 .load(Config.imageUrl + id)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.mipmap.ic_image_placeholder_foreground)
                 .into(it.productImage)

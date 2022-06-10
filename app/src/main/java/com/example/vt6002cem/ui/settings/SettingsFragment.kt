@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.vt6002cem.R
 import com.example.vt6002cem.http.UserApiService
 import com.example.vt6002cem.databinding.FragmentSettingsBinding
@@ -127,6 +128,8 @@ class SettingsFragment : Fragment() {
                 binding!!.viewModel = viewModel
                 Glide.with(this)
                     .load(it.avatarUrl)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .placeholder(R.mipmap.ic_image_placeholder_foreground)
                     .into(binding!!.avatarImg)
                 if(it.role=="user"){

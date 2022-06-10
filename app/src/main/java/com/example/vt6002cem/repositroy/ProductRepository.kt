@@ -11,4 +11,6 @@ class ProductRepository constructor(private val retrofitService: ProductsApiServ
         suspend fun getProdcutById(id: Int) = retrofitService.loadProductById(id)
         suspend fun getProdcutByIds(ids: Array<Int>) = retrofitService.loadProductByIds(ids)
         suspend fun create(product: Product) = retrofitService.create(product)
+        suspend fun edit(id: Int,product: Product) = retrofitService.edit(id,product)
+        suspend fun delete(id: Int,companyCode:String) = retrofitService.delete(id,companyCode)
 }

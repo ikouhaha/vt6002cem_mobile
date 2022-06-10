@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_product_detail"
             app:destination="@id/navigation_product_detail" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_edit_post"
+            app:destination="@id/navigation_edit_post" />
     </fragment>
 
     <fragment
@@ -28,6 +31,14 @@
         android:name="com.example.vt6002cem.ui.post.CreatePostFragment"
         android:label="@string/createPost"
         tools:layout="@layout/fragment_create_post" >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_post"
+        android:name="com.example.vt6002cem.ui.post.EditPostFragment"
+        android:label="@string/editPost"
+        tools:layout="@layout/fragment_edit_post" >
 
     </fragment>
 

@@ -7,12 +7,14 @@
     android:id="@+id/home_card"
     >
     <data>
+
         <variable
             name="product"
             type="com.example.vt6002cem.model.Product" />
         <variable
             name="position"
             type="int" />
+        <import type="android.view.View"/>
     </data>
 
     <LinearLayout
@@ -80,11 +82,33 @@
                 android:orientation="horizontal">
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/addToShoppingCartBtn"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/addToCart"
+                    android:text="@{product.canEdit?``:@string/addToCart}"
+                    android:layout_weight="1"
+                    app:iconGravity="textStart"
                     app:icon="@drawable/ic_baseline_shopping_cart_24"
                     style="?attr/borderlessButtonStyle"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:iconGravity="textStart"
+                    app:icon="@drawable/ic_baseline_edit_24"
+                    style="?attr/borderlessButtonStyle"
+                    android:visibility="@{product.canEdit?View.VISIBLE:View.GONE}"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:iconGravity="textStart"
+                    app:icon="@drawable/ic_baseline_delete_24"
+                    style="?attr/borderlessButtonStyle"
+                    android:visibility="@{product.canDelete?View.VISIBLE:View.GONE}"
                     />
 
             </LinearLayout>

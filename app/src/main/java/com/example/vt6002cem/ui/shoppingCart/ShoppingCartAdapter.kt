@@ -43,6 +43,7 @@ class ShoppingCartAdapter (private val context: Context?) : RecyclerView.Adapter
         context?.let {
             Glide.with(it)
                 .load(url)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .placeholder(R.mipmap.ic_image_placeholder_foreground)
                 .into(holder.binding.productImage)

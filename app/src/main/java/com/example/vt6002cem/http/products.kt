@@ -32,6 +32,17 @@ interface ProductsApiService {
         @Body product:Product,
     ): Response<Object>
 
+    @PUT("products/{id}")
+    suspend fun edit(
+        @Path("id") id:Int,
+        @Body product:Product,
+    ): Response<Object>
+
+    @DELETE("products/{id}/{companyCode}")
+    suspend fun delete(
+        @Path("id") id:Int,
+        @Path("companyCode") companyCode:String
+    ): Response<Object>
 
     companion object {
         var api: ProductsApiService? = null

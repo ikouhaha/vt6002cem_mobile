@@ -14,6 +14,7 @@ class HomeViewModel constructor(private val repository: ProductRepository): View
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val nextPage = MutableLiveData<Int>(filters.value?.page)
+    val isDelete = MutableLiveData<Boolean>()
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")
@@ -44,6 +45,27 @@ class HomeViewModel constructor(private val repository: ProductRepository): View
 
                     }
                     loading.postValue(false)
+                } else {
+                    onError("Error : ${response.message()} ")
+                }
+            }
+        }
+    }
+
+    fun deletePost(id:Int,companyCode:String){
+        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            loading.postValue(true)
+            val response = repository.delete(id,companyCode)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        //product.postValue(it)
+//                        isDelete.postValue(true)
+                        clearList()
+                        getProducts()
+                    }
+                    loading.postValue(false)
+
                 } else {
                     onError("Error : ${response.message()} ")
                 }

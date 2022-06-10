@@ -40,9 +40,11 @@
     <string name="avatar">Avatar</string>
     <string name="createPost">Create Post</string>
     <string name="create">Create</string>
+    <string name="edit">Edit</string>
     <string name="DescriptionRequired">Description*</string>
     <string name="priceRequired">Price*</string>
     <string name="upload">Upload</string>
     <string name="fingerPrint">FingerPrint</string>
+    <string name="editPost">Edit Post</string>
 
 </resources>

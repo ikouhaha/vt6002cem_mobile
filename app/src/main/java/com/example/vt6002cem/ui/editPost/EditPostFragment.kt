@@ -1,13 +1,13 @@
 package com.example.vt6002cem.ui.post
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +18,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.common.Validations
 import com.example.vt6002cem.databinding.FragmentCreatePostBinding
+import com.example.vt6002cem.databinding.FragmentEditPostBinding
 import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
@@ -31,24 +33,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import java.io.ByteArrayOutputStream
 
 
-class CreatePostFragment : Fragment() {
+class EditPostFragment : Fragment() {
 
-    private lateinit var binding: FragmentCreatePostBinding
+    private lateinit var binding: FragmentEditPostBinding
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888
     private val UPDATE_IMAGE_ACTIVITY_REQUEST_CODE = 1999
     private lateinit var auth: FirebaseAuth
     private  lateinit var  navController: NavController
     private var id: Int? = null
     private var action: String? = null
-    private lateinit var viewModel: CreatePostViewModel
+    private lateinit var viewModel: EditPostViewModel
     private var isInit: Boolean = false
 
 
-    private var TAG = "CreatePost"
+    private var TAG = "EditPost"
     fun loading() {
         binding.indicator.show()
 
@@ -83,13 +84,14 @@ class CreatePostFragment : Fragment() {
         arguments?.let { id = it.getInt("id") }
         arguments?.let { action = it.getString("action") }
 
-        binding = FragmentCreatePostBinding.inflate(inflater, container, false)
+        binding = FragmentEditPostBinding.inflate(inflater, container, false)
+        Glide.with(this)
+            .load(Config.imageUrl + id)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .placeholder(R.mipmap.ic_image_placeholder_foreground)
+            .into(binding.productImage)
         val root: View = binding!!.root
-        return root
-    }
-
-    override fun onStart() {
-        super.onStart()
         if (Firebase.auth.currentUser == null) {
             init(null)
         } else {
@@ -97,24 +99,32 @@ class CreatePostFragment : Fragment() {
                 init(it.result.token)
             }
         }
+        return root
     }
 
     fun init(token: String?) {
         isInit = false
         val retrofitService = ProductsApiService.getInstance(token)
         val repository = Factory(ProductRepository(retrofitService))
-        viewModel = ViewModelProvider(this, repository)[CreatePostViewModel::class.java]
+        viewModel = ViewModelProvider(this, repository)[EditPostViewModel::class.java]
+        binding.let {
+            viewModel.getProduct(id!!)
+
+
+        }
         binding.viewModel = viewModel
         initObserve()
 
 
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
 
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     fun initObserve() {
         viewModel?.let {
             it.errorMessage.observe(this) { msg ->
@@ -138,9 +148,9 @@ class CreatePostFragment : Fragment() {
             it.actionTextToast.observe(this) { text ->
                 if (!text.isNullOrEmpty()) {
                     Toast.makeText(activity, text, Toast.LENGTH_SHORT).show()
-                    navController.navigate(R.id.navigation_home)
-                    viewModel.product.postValue(Product())
-                    it.actionTextToast.postValue("")
+                    //navController.navigate(R.id.navigation_home)
+                    //viewModel.product.postValue(Product())
+                    //it.actionTextToast.postValue("")
 //                        requireActivity().viewModelStore.clear();
                 }
             }
@@ -166,7 +176,7 @@ class CreatePostFragment : Fragment() {
         binding.actionButton.setOnClickListener {
 
             if (viewModel.isFormValid()) {
-                viewModel.createPost()
+                viewModel.editPost(id!!)
             } else {
                 //set error
                 binding.viewModel?.product?.value?.let {
@@ -220,8 +230,8 @@ class CreatePostFragment : Fragment() {
         ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(CreatePostViewModel::class.java)) {
-                CreatePostViewModel(this.repository) as T
+            return if (modelClass.isAssignableFrom(EditPostViewModel::class.java)) {
+                EditPostViewModel(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

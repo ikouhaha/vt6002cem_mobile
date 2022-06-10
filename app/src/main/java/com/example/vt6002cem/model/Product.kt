@@ -51,6 +51,20 @@ class Product : BaseObservable() {
             //otifyPropertyChanged(BR.imageBase64)
         }
 
+    @get:Bindable
+    var canEdit: Boolean? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.canEdit)
+        }
+
+    @get:Bindable
+    var canDelete: Boolean? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.canDelete)
+        }
+
     @Bindable
     fun getPriceString(): String? {
         if(price==null){

@@ -12,14 +12,14 @@
             type="com.example.vt6002cem.model.Product" />
         <variable
             name="viewModel"
-            type="com.example.vt6002cem.ui.post.CreatePostViewModel" />
+            type="com.example.vt6002cem.ui.post.EditPostViewModel" />
     </data>
 
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.post.CreatePostFragment"
+    tools:context=".ui.post.EditPostFragment"
     >
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -156,7 +156,7 @@
             style="?attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/create" />
+            android:text="@string/edit" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
