@@ -27,6 +27,16 @@ class ShoppingCartAdapter (private val context: Context?) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
+    fun getAmt():Number{
+        var amount:Long = 0
+        for(p in this.list){
+            p.price?.let { it ->
+                amount = amount.plus(it.toLong())
+            }
+
+        }
+        return amount
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -69,4 +79,5 @@ class ShoppingCartAdapter (private val context: Context?) : RecyclerView.Adapter
 
 
 }
+
 

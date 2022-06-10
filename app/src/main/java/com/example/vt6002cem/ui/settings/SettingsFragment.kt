@@ -16,14 +16,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.vt6002cem.R
+import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.http.UserApiService
 import com.example.vt6002cem.databinding.FragmentSettingsBinding
+import com.example.vt6002cem.model.User
 import com.example.vt6002cem.repositroy.UserRepository
 import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 
 
 class SettingsFragment : Fragment() {
@@ -100,7 +103,9 @@ class SettingsFragment : Fragment() {
         viewModel = ViewModelProvider(this,repository)[SettingsViewModel::class.java]
         binding!!.viewModel = viewModel
         initObserve()
-        viewModel?.getProfile()
+        var profile = Gson().fromJson(Helper.getStoreString(context,"profile"), User::class.java)
+        viewModel?.user?.postValue(profile)
+
 
     }
     fun initObserve() {

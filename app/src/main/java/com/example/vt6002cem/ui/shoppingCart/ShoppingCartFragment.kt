@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.PaymentActivity
 import com.example.vt6002cem.R
@@ -39,7 +40,6 @@ class ShoppingCartFragment : Fragment() {
     private lateinit var adapter: ShoppingCartAdapter
     private  lateinit var  navController: NavController
     private var ref: DatabaseReference? = null
-
     private var TAG = "ShoppingCart"
 
     var _taskListener: ValueEventListener = object : ValueEventListener {
@@ -102,6 +102,7 @@ class ShoppingCartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        navController = findNavController()
         arguments?.let { id = it.getInt("id") }
         arguments?.let { action = it.getString("action") }
 
@@ -194,8 +195,10 @@ class ShoppingCartFragment : Fragment() {
             }
         }
         binding.checkOutBtn.setOnClickListener {
-            ref?.removeValue()
+            //ref?.removeValue()
+
             val intent = Intent(activity, PaymentActivity::class.java)
+            intent.putExtra("amt",adapter.getAmt().toFloat())
             startActivity(intent)
         }
     }

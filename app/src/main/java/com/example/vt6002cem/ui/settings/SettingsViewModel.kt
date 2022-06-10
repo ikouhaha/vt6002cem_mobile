@@ -28,20 +28,20 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
     }
     var job: Job? = null
 
-    fun getProfile(){
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            loading.postValue(true)
-            val response = repository.getProfile()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    loading.postValue(false)
-                    user.postValue(response.body())
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
-            }
-        }
-    }
+//    fun getProfile(){
+//        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+//            loading.postValue(true)
+//            val response = repository.getProfile()
+//            withContext(Dispatchers.Main) {
+//                if (response.isSuccessful) {
+//                    loading.postValue(false)
+//                    user.postValue(response.body())
+//                } else {
+//                    onError("Error : ${response.message()} ")
+//                }
+//            }
+//        }
+//    }
 
     fun isChangePwdFormValid(): Boolean {
         formErrors.clear()
