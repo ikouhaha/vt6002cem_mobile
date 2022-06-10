@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.vt6002cem.Config
+import com.example.vt6002cem.PaymentActivity
 import com.example.vt6002cem.R
 import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
@@ -51,18 +52,17 @@ class ShoppingCartFragment : Fragment() {
                 }
             }
             viewModel.apply {
-                ids.postValue(arr.toTypedArray())
-                getProducts()
+                getProducts(arr.toTypedArray())
             }
         }
 
         override fun onCancelled(error: DatabaseError) {
-            Toast.makeText(
-                activity,
-                "Failed to read value." + error.toException(),
-                Toast.LENGTH_SHORT
-            )
-                .show()
+//            Toast.makeText(
+//                activity,
+//                "Failed to read value." + error.toException(),
+//                Toast.LENGTH_SHORT
+//            )
+//                .show()
         }
 
     }
@@ -130,16 +130,11 @@ class ShoppingCartFragment : Fragment() {
                     }
                 }
                 viewModel.apply {
-                    ids.postValue(arr.toTypedArray())
-                    getProducts()
+                    getProducts(arr.toTypedArray())
                 }
             }
+            ref?.removeEventListener(_taskListener)
             ref?.addValueEventListener(_taskListener)
-
-
-
-
-
         }
 
     }
@@ -189,6 +184,11 @@ class ShoppingCartFragment : Fragment() {
 
                 }
             }
+        }
+        binding.checkOutBtn.setOnClickListener {
+            ref?.removeValue()
+            val intent = Intent(activity, PaymentActivity::class.java)
+            startActivity(intent)
         }
     }
 

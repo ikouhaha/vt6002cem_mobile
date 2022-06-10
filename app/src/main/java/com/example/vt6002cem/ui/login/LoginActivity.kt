@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import java.util.concurrent.Executor
 import javax.crypto.Cipher
 
@@ -48,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
     private var cipher: Cipher? = null
     private var encryptedMessage: EncryptedMessage? = null
     private var encryptedString:String?= null
+    private var profile: User? = null
 
 
     private enum class ACTION {
@@ -85,6 +87,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(Helper.getStoreString(this,"profile").isNullOrEmpty()){
+
+        }else{
+            profile = Gson().fromJson(Helper.getStoreString(this,"profile"),User::class.java)
+        }
         cipher = CryptographyUtil.getInitializedCipherForEncryption()
         encryptedMessage = Helper.getEncryptedMessage(this, KEY_NAME)
         //val encryptedMessage = CryptographyUtil.encryptData("test", cipher!!)
@@ -115,16 +122,13 @@ class LoginActivity : AppCompatActivity() {
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-
-
-
                     if(action==ACTION.LOGIN){
                         encryptedMessage?.cipherText?.let { it ->
                             result.cryptoObject?.cipher?.let { cipher ->
                                 val decryptedMessage = CryptographyUtil.decryptData(it, cipher)
                                 val email = decryptedMessage.split(":")[0]
                                 val password = decryptedMessage.split(":")[1]
-                                emailAuth(email, password)
+                                emailAuth(email, password,false)
                             }
                         }
                     }else if(action==ACTION.FINGERPRINT){
@@ -236,11 +240,10 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-    fun emailAuth(email: String, password: String) {
+    fun emailAuth(email: String, password: String,needRegister:Boolean=true) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-
-                if(encryptedMessage==null){
+                if(needRegister&&(encryptedMessage==null||profile?.email!=email)){
                     //ask confirm register finger print
                     promptInfo = BiometricPrompt.PromptInfo.Builder()
                         .setTitle("Biometric login for my app")
@@ -258,7 +261,7 @@ class LoginActivity : AppCompatActivity() {
 
             }
         }.addOnFailureListener { exception ->
-            Helper.clearEncryptedMessage(this,KEY_NAME)
+
             Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_LONG).show()
 
         }

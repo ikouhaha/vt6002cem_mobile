@@ -13,26 +13,25 @@ class ShoppingCartViewModel (private val repository: ProductRepository) : ViewMo
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     var productList= MutableLiveData<ArrayList<Product>>()
-    var ids= MutableLiveData<Array<Int>>(arrayOf())
     var deleteIds= MutableLiveData<ArrayList<Int>>(arrayListOf())
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e("ShoppingCartViewModel", throwable.toString())
         onError("Exception handled: ${throwable.localizedMessage}")
     }
-    fun getProducts(){
+    fun getProducts(ids:Array<Int> = arrayOf() ){
         if(loading.value==true){
             return
         }
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             loading.postValue(true)
-            val response = repository.getProdcutByIds(ids.value!!)
+            val response = repository.getProdcutByIds(ids)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         productList.postValue(it)
 
-                        ids.value?.let {array->
+                        ids.let { array->
                             deleteIds.value?.clear()
                             for(id in array){
                                 val find = it.find { product->product.id==id}

@@ -69,7 +69,7 @@
                     android:padding="12dp">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/addToShoppingCartBtn"
+                        android:id="@+id/checkOutBtn"
                         style="?attr/borderlessButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

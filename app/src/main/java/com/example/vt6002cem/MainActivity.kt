@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var notificationBadge: BadgeDrawable
     private lateinit var cartBadge: BadgeDrawable
-    private var user = MutableLiveData<User>()
+    private var profile:User? = null
+    private var navView: BottomNavigationView? = null
 
     var _taskListener: ValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
@@ -106,6 +107,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         if (Firebase.auth.currentUser == null) {
             init()
+            navView?.menu?.findItem(R.id.navigation_create_post)?.isVisible = false
+
         } else {
             Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
                 val repository = UserRepository(UserApiService.getInstance(it.result.token))
@@ -113,7 +116,6 @@ class MainActivity : AppCompatActivity() {
                     val response = repository.getProfile()
                     if (response.isSuccessful) {
                         response.body()?.let {u->
-                            user.postValue(u)
                             if(u.role=="staff"){
                                 notificationRef = database.getReference("/notifications/${u.companyCode}")
                             }else{
@@ -126,7 +128,11 @@ class MainActivity : AppCompatActivity() {
 
 
                             Helper.setStoreString(this@MainActivity, "profile", Gson().toJson(u))
+
                             init()
+
+                            navView?.menu?.findItem(R.id.navigation_create_post)?.isVisible = u.role=="staff"
+
                         }
                     } else {
                         Toast.makeText(
@@ -143,9 +149,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun init() {
+
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        navView = binding.navView
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
@@ -164,15 +171,17 @@ class MainActivity : AppCompatActivity() {
 
 
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+
+
+        navView!!.setupWithNavController(navController)
 
         //supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-        notificationBadge = navView.getOrCreateBadge(R.id.navigation_notifications)
+        notificationBadge = navView!!.getOrCreateBadge(R.id.navigation_notifications)
 
         notificationBadge.isVisible = false
 
-        cartBadge = navView.getOrCreateBadge(R.id.navigation_shopping_cart)
+        cartBadge = navView!!.getOrCreateBadge(R.id.navigation_shopping_cart)
         cartBadge.isVisible = false
 
 
@@ -205,6 +214,8 @@ class MainActivity : AppCompatActivity() {
     //  life cycle function , pop up if available
     override fun onResume() {
         super.onResume()
+
+
 
         val biometricManager = BiometricManager.from(this)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {

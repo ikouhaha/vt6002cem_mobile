@@ -104,12 +104,6 @@ class ProductDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        var user = auth.currentUser
-        if (user == null) {
-            val intent = Intent(activity, LoginActivity::class.java)
-            startActivity(intent)
-        }
-
         if(Helper.getStoreString(context,"profile").isNullOrEmpty()){
 
         }else{
@@ -118,6 +112,13 @@ class ProductDetailFragment : Fragment() {
 
         commentAdapter = CommentAdapter(context)
 
+    }
+
+    fun validatePermisson(){
+        if (auth.currentUser == null) {
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onCreateView(
@@ -198,6 +199,7 @@ class ProductDetailFragment : Fragment() {
         binding.etComment.setOnEditorActionListener { v, actionId, event ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
+                validatePermisson()
                 Firebase.auth.currentUser?.let { user ->
                     viewModel.comment.value?.apply {
                         productId = id
@@ -264,13 +266,16 @@ class ProductDetailFragment : Fragment() {
             handled
         }
         binding.addToShoppingCartBtn.setOnClickListener{
+            validatePermisson()
             Firebase.auth.currentUser?.let {user->
 
                 database.getReference("/cart/${user.uid}/${id}").setValue(true)
             }
         }
+        if(Firebase.auth.currentUser!=null){
+            commentRef?.addValueEventListener(_commentListener)
+        }
 
-        commentRef?.addValueEventListener(_commentListener)
     }
 
     inner class Factory constructor(

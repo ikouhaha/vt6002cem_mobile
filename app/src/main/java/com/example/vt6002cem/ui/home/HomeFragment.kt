@@ -1,6 +1,7 @@
 package com.example.vt6002cem.ui.home
 
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import com.example.vt6002cem.R
 import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.databinding.FragmentHomeBinding
 import com.example.vt6002cem.repositroy.ProductRepository
+import com.example.vt6002cem.ui.login.LoginActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
@@ -64,12 +66,14 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         navController = findNavController(this)
+
         val root: View = binding.root
         return root
     }
 
     override fun onStart() {
         super.onStart()
+        viewModel?.clearList()
         if(Firebase.auth.currentUser==null){
             init(null)
         }else{
@@ -159,8 +163,11 @@ class HomeFragment : Fragment() {
 
         adapter.onShoppingCartClick = { product ->
             Log.d(TAG, product.id.toString())
+            if(Firebase.auth.currentUser==null){
+                val intent = Intent(activity, LoginActivity::class.java)
+                startActivity(intent)
+            }
             Firebase.auth.currentUser?.let {user->
-
                 database.getReference("/cart/${user.uid}/${product.id}").setValue(true)
             }
         }
