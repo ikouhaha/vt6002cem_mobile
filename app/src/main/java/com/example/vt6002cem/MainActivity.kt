@@ -110,7 +110,16 @@ class MainActivity : AppCompatActivity() {
             navView?.menu?.findItem(R.id.navigation_create_post)?.isVisible = false
 
         } else {
-            Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { it ->
+            var idRequest = Firebase.auth.currentUser?.getIdToken(true)
+            idRequest?.addOnCanceledListener{
+                Log.e("asdsad","asd".toString())
+            }
+            idRequest?.addOnFailureListener{it->
+
+                Log.e("asdsad",it.message.toString())
+
+            }
+            idRequest?.addOnCompleteListener { it ->
                 val repository = UserRepository(UserApiService.getInstance(it.result.token))
                 lifecycleScope.launch {
                     val response = repository.getProfile()

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import com.example.vt6002cem.Config
 import com.example.vt6002cem.PaymentActivity
 import com.example.vt6002cem.R
@@ -36,6 +37,7 @@ class ShoppingCartFragment : Fragment() {
     private var action: String? = null
     private lateinit var viewModel: ShoppingCartViewModel
     private lateinit var adapter: ShoppingCartAdapter
+    private  lateinit var  navController: NavController
     private var ref: DatabaseReference? = null
 
     private var TAG = "ShoppingCart"
@@ -146,6 +148,12 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private fun initObserve() {
+        adapter?.onItemClick = {
+            val bundle = Bundle()
+            bundle.putInt("id", it.id!!)
+            navController.navigate(R.id.navigation_product_detail,bundle)
+
+        }
         viewModel.productList.observe(this) {
             adapter.setProductList(it)
 
