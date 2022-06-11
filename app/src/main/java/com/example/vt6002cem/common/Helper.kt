@@ -59,11 +59,6 @@ object Helper {
         return context!!.getSharedPreferences(prefs, Context.MODE_PRIVATE).getBoolean(key,false)
     }
 
-    fun getErrorMsg(response: Response<Object>){
-
-
-    }
-
     fun storeEncryptedMessage(
         context: Context,
         prefKey: String,
@@ -132,19 +127,6 @@ object Helper {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
-    }
-
-    suspend fun getToken():String {
-        if(Firebase.auth.currentUser==null){
-            return ""
-        }
-
-        var token:String? = Tasks.await(Firebase.auth.currentUser!!.getIdToken(true)).token
-
-        if(token==null){
-            return ""
-        }
-        return token
     }
 
 }

@@ -123,7 +123,7 @@ ${address.getAddressLine(i)}
                     DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
                 .create()?.show()
             mLocationProvider?.removeLocationUpdates(mLocationCallBack)
-            binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
+            binding?.ivGpsSearch?.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
         }
     }
 
@@ -164,7 +164,7 @@ ${address.getAddressLine(i)}
 
 
     fun onLocateStartClicked() {
-        binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_fixed_24)
+        binding?.ivGpsSearch?.setIconResource(R.drawable.ic_baseline_gps_fixed_24)
         mLocationRequest = LocationRequest()
         mLocationRequest!!.interval = 1
         mLocationRequest!!.fastestInterval = 1
@@ -243,7 +243,7 @@ ${address.getAddressLine(i)}
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        binding?.ivGpsSearch.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
+        binding?.ivGpsSearch?.setIconResource(R.drawable.ic_baseline_gps_not_fixed_24)
         navController = findNavController(this)
 
 

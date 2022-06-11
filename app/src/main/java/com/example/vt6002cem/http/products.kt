@@ -30,19 +30,19 @@ interface ProductsApiService {
     @POST("products")
     suspend fun create(
         @Body product:Product,
-    ): Response<Object>
+    ): Response<Any>
 
     @PUT("products/{id}")
     suspend fun edit(
         @Path("id") id:Int,
         @Body product:Product,
-    ): Response<Object>
+    ): Response<Any>
 
     @DELETE("products/{id}/{companyCode}")
     suspend fun delete(
         @Path("id") id:Int,
         @Path("companyCode") companyCode:String
-    ): Response<Object>
+    ): Response<Any>
 
     companion object {
         var api: ProductsApiService? = null

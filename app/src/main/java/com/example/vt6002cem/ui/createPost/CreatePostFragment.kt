@@ -1,4 +1,4 @@
-package com.example.vt6002cem.ui.post
+package com.example.vt6002cem.ui.createPost
 
 
 import android.app.Activity
@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +16,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.bumptech.glide.Glide
-import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.common.Validations
@@ -27,11 +24,10 @@ import com.example.vt6002cem.http.ProductsApiService
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.vt6002cem.ui.post.CreatePostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import java.io.ByteArrayOutputStream
 
 
@@ -178,6 +174,7 @@ class CreatePostFragment : Fragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {

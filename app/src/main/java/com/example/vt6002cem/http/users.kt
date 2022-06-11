@@ -11,11 +11,11 @@ import retrofit2.http.*
 
 interface UserApiService {
     @POST("users")
-    suspend fun createUser(@Body user:User): Response<Object>
+    suspend fun createUser(@Body user:User): Response<Any>
     @PUT("users/p/{id}")
-    suspend fun changePwd(@Path("id") id:Int,@Body user:User): Response<Object>
+    suspend fun changePwd(@Path("id") id:Int,@Body user:User): Response<Any>
     @PUT("users/{id}")
-    suspend fun changeProfile(@Path("id") id:Int,@Body user:User): Response<Object>
+    suspend fun changeProfile(@Path("id") id:Int,@Body user:User): Response<Any>
     @GET("users/profile")
     suspend fun getProfile(): Response<User>
 

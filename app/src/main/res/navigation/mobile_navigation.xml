@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/navigation_create_post"
-        android:name="com.example.vt6002cem.ui.post.CreatePostFragment"
+        android:name="com.example.vt6002cem.ui.createPost.CreatePostFragment"
         android:label="@string/createPost"
         tools:layout="@layout/fragment_create_post" >
 
