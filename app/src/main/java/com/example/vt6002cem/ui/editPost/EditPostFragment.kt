@@ -1,4 +1,4 @@
-package com.example.vt6002cem.ui.post
+package com.example.vt6002cem.ui.editPost
 
 
 import android.annotation.SuppressLint
@@ -23,13 +23,11 @@ import com.example.vt6002cem.Config
 import com.example.vt6002cem.R
 import com.example.vt6002cem.common.Helper
 import com.example.vt6002cem.common.Validations
-import com.example.vt6002cem.databinding.FragmentCreatePostBinding
 import com.example.vt6002cem.databinding.FragmentEditPostBinding
 import com.example.vt6002cem.http.ProductsApiService
-import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.repositroy.ProductRepository
 import com.example.vt6002cem.ui.login.LoginActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.vt6002cem.ui.post.EditPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

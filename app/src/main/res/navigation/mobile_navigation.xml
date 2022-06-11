@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/navigation_edit_post"
-        android:name="com.example.vt6002cem.ui.post.EditPostFragment"
+        android:name="com.example.vt6002cem.ui.editPost.EditPostFragment"
         android:label="@string/editPost"
         tools:layout="@layout/fragment_edit_post" >
 
