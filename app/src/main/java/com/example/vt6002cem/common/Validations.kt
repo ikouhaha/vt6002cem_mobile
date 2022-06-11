@@ -43,7 +43,7 @@ object Validations {
     }
 
     fun name(input:String?):String? {
-        var regexStr:String = "^(?=.*[a-z])[A-Za-z ]{2,}\\$"
+        var regexStr:String = "^[a-z ,.'-]+\$"
 
         if(input.isNullOrEmpty()){
             return "Please fill the name field"
@@ -65,27 +65,15 @@ object Validations {
         return null;
     }
 
-    fun float(input: Float?):String? {
-        var regexStr = "^(([1-9]*)|(([1-9]*)\\.([0-9]*)))\$"
-        if(input==null){
-            return "Please fill the field"
-        }
-
-        if(!input.toString().matches(regexStr.toRegex())){
-            return "Please input validate number"
-        }
-
-        return null;
-    }
 
     fun number(input: Number?):String? {
-        var regexStr = "^(0|[1-9][0-9]*)\$"
+
         if(input==null){
-            return "Please fill the field"
+            return "Please fill the number field"
         }
-        if(!input.toString().matches(regexStr.toRegex())){
-            return "Please input validate number"
-        }
+        // if(!input.toString().matches(regexStr.toRegex())){
+        //     return "Please input validate number"
+        // }
         return null;
     }
 

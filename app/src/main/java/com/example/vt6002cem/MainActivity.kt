@@ -5,6 +5,7 @@ import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -225,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         notificationRef?.removeEventListener(_notifyListener)
     }
 
-    fun signOut() {
+    fun signOut(view: View) {
         Firebase.auth.currentUser?.let {
             ref?.removeEventListener(_taskListener)
             Firebase.auth.signOut()

@@ -111,11 +111,18 @@ class LoginActivity : AppCompatActivity() {
                     errString: CharSequence
                 ) {
                     super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(
-                        applicationContext,
-                        "Authentication error: $errString", Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    if(action == ACTION.FINGERPRINT){
+                        goToHome()
+                    }else{
+                        Toast.makeText(
+                            applicationContext,
+                            "Authentication error: $errString", Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+
+
                 }
 
                 override fun onAuthenticationSucceeded(
@@ -152,6 +159,8 @@ class LoginActivity : AppCompatActivity() {
                     )
                         .show()
                 }
+
+
             })
 
 
@@ -249,7 +258,7 @@ class LoginActivity : AppCompatActivity() {
                     promptInfo = BiometricPrompt.PromptInfo.Builder()
                         .setTitle("Biometric login for my app")
                         .setSubtitle("Register finger print to futher login?")
-                        .setNegativeButtonText("Use account password")
+                        .setNegativeButtonText("Cancel")
                         .build()
                     action = ACTION.FINGERPRINT
                     encryptedString = "$email:$password"

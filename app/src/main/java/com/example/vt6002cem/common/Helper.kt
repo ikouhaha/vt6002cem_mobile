@@ -52,7 +52,9 @@ object Helper {
     fun setStoreBoolean(context: Context?,key:String,value:Boolean,prefs: String?="store") {
         ensureNotNull(context)
         context!!.getSharedPreferences(prefs, Context.MODE_PRIVATE)
-            .edit().putBoolean(key, value).apply()
+            .edit()
+            .putBoolean(key, value)
+            .apply()
     }
     fun getStoreBoolean(context: Context?,key:String,prefs: String?="store"):Boolean {
         ensureNotNull(context)
@@ -62,7 +64,7 @@ object Helper {
     fun storeEncryptedMessage(
         context: Context,
         prefKey: String,
-        encryptedMessage: EncryptedMessage
+        encryptedMessage: EncryptedMessage,
     ) {
         val json = Gson().toJson(encryptedMessage)
         context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
@@ -88,13 +90,6 @@ object Helper {
         return Calendar.getInstance().time
     }
 
-    fun clearEncryptedMessage(
-        context: Context,
-        prefKey: String
-    ){
-         context.getSharedPreferences(SHARED_PREFS_FILENAME, Context.MODE_PRIVATE)
-             .edit().remove(prefKey).apply()
-    }
 
     fun getHttpTokenClient(token:String):OkHttpClient{
         var httpClient = OkHttpClient.Builder()
