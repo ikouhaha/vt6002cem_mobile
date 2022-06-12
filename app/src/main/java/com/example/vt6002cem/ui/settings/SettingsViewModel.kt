@@ -20,7 +20,6 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
     val loading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
     var isSave = MutableLiveData<Boolean>()
-    val isSuccessRegister = MutableLiveData<Boolean>()
     private val TAG = "SettingsViewModel"
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -107,25 +106,6 @@ class SettingsViewModel constructor(private val repository: UserRepository) : Vi
             }
         }
     }
-
-
-    fun isFormValid(): Boolean {
-        formErrors.clear()
-
-        user.value?.apply {
-            email = email?:""
-            password = password?:""
-            confirmPassword = confirmPassword?:""
-            Validations.email(email).let { if (it != null) {formErrors.add(it) } }
-            Validations.password(password).let { if (it != null) {formErrors.add(it) } }
-            Validations.confirmPassword(confirmPassword,password).let { if (it != null) {formErrors.add(it) } }
-
-        }
-        // all the other validation you require
-        return formErrors.isEmpty()
-    }
-
-
 
     private fun onError(message: String) {
         errorMessage.postValue(message)
