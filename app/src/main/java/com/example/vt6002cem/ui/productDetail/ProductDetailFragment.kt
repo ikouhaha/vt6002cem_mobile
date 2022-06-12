@@ -151,10 +151,9 @@ class ProductDetailFragment : Fragment() {
 
     private fun init(token: String?) {
         val retrofitService = ProductsApiService.getInstance(token)
-        val userRetrofitService = UserApiService.getInstance(token)
+        //val userRetrofitService = UserApiService.getInstance(token)
         val repository = Factory(
-            ProductRepository(retrofitService),
-            UserRepository(userRetrofitService)
+            ProductRepository(retrofitService)
         )
 
         binding.commentList.adapter = commentAdapter
@@ -280,13 +279,12 @@ class ProductDetailFragment : Fragment() {
     }
 
     inner class Factory constructor(
-        private val repository: ProductRepository,
-        private val userRepository: UserRepository
+        private val repository: ProductRepository
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-                ProductDetailViewModel(this.repository, this.userRepository) as T
+                ProductDetailViewModel(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

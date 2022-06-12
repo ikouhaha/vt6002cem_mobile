@@ -7,11 +7,10 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.invocation.InvocationOnMock
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
+
 import java.security.KeyStore
 
-@PrepareForTest(KeyStore::class)
+
 class CryptographyUtilTest {
 
     @Mock

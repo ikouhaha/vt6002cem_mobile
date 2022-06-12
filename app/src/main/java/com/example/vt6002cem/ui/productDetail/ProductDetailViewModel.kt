@@ -6,10 +6,9 @@ import com.example.vt6002cem.model.Comment
 import com.example.vt6002cem.model.Product
 import com.example.vt6002cem.model.User
 import com.example.vt6002cem.repositroy.ProductRepository
-import com.example.vt6002cem.repositroy.UserRepository
 import kotlinx.coroutines.*
 
-class ProductDetailViewModel (private val repository: ProductRepository,private val userRepository: UserRepository) : ViewModel() {
+class ProductDetailViewModel (private val repository: ProductRepository) : ViewModel() {
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val product = MutableLiveData<Product>()

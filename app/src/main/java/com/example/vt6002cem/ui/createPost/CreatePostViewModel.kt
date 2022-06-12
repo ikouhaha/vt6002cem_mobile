@@ -22,24 +22,6 @@ class CreatePostViewModel (private val repository: ProductRepository) : ViewMode
     }
 
 
-
-    fun getProduct(id:Int){
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            loading.postValue(true)
-            val response = repository.getProdcutById(id)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        product.postValue(it)
-                    }
-                    loading.postValue(false)
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
-            }
-        }
-    }
-
     fun createPost(){
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             loading.postValue(true)

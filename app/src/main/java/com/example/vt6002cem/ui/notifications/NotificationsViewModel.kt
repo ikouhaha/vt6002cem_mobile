@@ -11,8 +11,6 @@ class NotificationsViewModel : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
-    val product = MutableLiveData<Product>()
-    val comment = MutableLiveData<Comment>(Comment())
     var commentList= MutableLiveData<ArrayList<Comment>>()
     var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->

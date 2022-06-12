@@ -15,7 +15,6 @@ import com.example.vt6002cem.databinding.FragmentProductCommentCardBinding
 import com.example.vt6002cem.databinding.FragmentShoppingCartBinding
 import com.example.vt6002cem.databinding.FragmentShoppingCartCardBinding
 import com.example.vt6002cem.model.Comment
-import com.example.vt6002cem.model.Product
 
 
 class NotificationAdapter (private val context: Context?) : RecyclerView.Adapter<NotificationAdapter.MainViewHolder>() {

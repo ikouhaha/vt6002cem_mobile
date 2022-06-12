@@ -108,7 +108,6 @@ class EditPostFragment : Fragment() {
         binding.let {
             viewModel.getProduct(id!!)
 
-
         }
         binding.viewModel = viewModel
         initObserve()

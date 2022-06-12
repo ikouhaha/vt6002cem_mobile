@@ -10,7 +10,7 @@ import com.example.vt6002cem.repositroy.ProductRepository
 import kotlinx.coroutines.*
 
 class EditPostViewModel (private val repository: ProductRepository) : ViewModel() {
-    val errorMessage = MutableLiveData<String>()
+    var errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val product = MutableLiveData<Product>(Product())
     var job: Job? = null
@@ -40,23 +40,6 @@ class EditPostViewModel (private val repository: ProductRepository) : ViewModel(
         }
     }
 
-    fun createPost(){
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            loading.postValue(true)
-            val response = repository.create(product.value!!)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        //product.postValue(it)
-                        actionTextToast.postValue("create successfully")
-                    }
-                    loading.postValue(false)
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
-            }
-        }
-    }
 
     fun editPost(id:Int){
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
